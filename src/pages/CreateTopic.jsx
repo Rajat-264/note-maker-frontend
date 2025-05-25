@@ -16,7 +16,7 @@ export default function CreateTopic() {
   return (
     <div className="create-topic-page">
       <form onSubmit={handleSubmit} className="form">
-        <h2 className="text-2xl font-bold mb-4 text-center">Create New Topic</h2>
+        <h1 className="text-2xl font-bold mb-4 text-center">Create New Topic</h1>
         <input
           type="text"
           placeholder="Topic Title"
