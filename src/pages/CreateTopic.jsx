@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import API from '../../services/api';
 import { useNavigate } from 'react-router-dom';
+import './CreateTopic.css';
 
 export default function CreateTopic() {
   const [title, setTitle] = useState('');
