@@ -23,7 +23,7 @@ export default function Topic() {
   const handleImproveWithAI = async () => {
     const token = localStorage.getItem('token'); 
     try {
-      const res = await fetch(`http://localhost:5002/improve/${id}`, {
+      const res = await fetch(`https://note-maker-ai-service.onrender.com/improve/${id}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });
