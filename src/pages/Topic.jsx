@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import API from '../../services/api';
 import './Topic.css';
-import ReactMarkdown from 'react-markdown';
 
 export default function Topic() {
   const { id } = useParams();
