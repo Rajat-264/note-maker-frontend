@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import API from '../../services/api';
 import './Topic.css';
+import ReactMarkdown from 'react-markdown';
 
 export default function Topic() {
   const { id } = useParams();
@@ -68,9 +69,9 @@ export default function Topic() {
         <h2 className="header">Notes</h2>
         <ul className="space-y-2">
           {topic?.notes?.map((note, idx) => (
-            <p key={idx} className="bg-gray-50 p-3 rounded shadow">
+            <ReactMarkdown key={idx} className="bg-gray-50 p-3 rounded shadow">
               {note}
-            </p>
+            </ReactMarkdown>
           ))}
         </ul>
       </div>
