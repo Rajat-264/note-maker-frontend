@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import API from '../../../services/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './Login.css'
 
 export default function Login() {
@@ -34,7 +34,7 @@ export default function Login() {
           Login
         </button>
         <p>
-          Don't have an account? <a href="/register" className="text-blue-500">Register</a>
+          Don't have an account? <Link to="/register" className="text-blue-500">Register</Link>
         </p>
       </form>
     </div>
