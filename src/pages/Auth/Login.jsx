@@ -33,6 +33,9 @@ export default function Login() {
         <button type="submit" className="button">
           Login
         </button>
+        <p>
+          Don't have an account? <a href="/register" className="text-blue-500">Register</a>
+        </p>
       </form>
     </div>
   );
