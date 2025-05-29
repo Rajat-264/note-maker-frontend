@@ -9,7 +9,6 @@
     padding: 0 10px;
 }
 
-/* Main content container */
 .dashboard-container {
     display: flex;
     flex-direction: column;
@@ -20,7 +19,6 @@
     padding: 0 10px;
 }
 
-/* Button style */
 .button {
     margin-top: 20px;
     background-color: rgb(4, 70, 252);
@@ -37,7 +35,6 @@
     background-color: rgb(57, 110, 255);
 }
 
-/* Topic heading */
 .topic {
     font-weight: 800;
     margin-top: 50px;
@@ -45,7 +42,6 @@
     text-align: left;
 }
 
-/* Container for topic tiles/cards */
 .topic-container {
     display: flex;
     flex-wrap: wrap;
@@ -54,13 +50,11 @@
     margin-top: 30px;
 }
 
-/* Topic text */
 .topics {
     font-size: 20px;
     color: rgb(98, 98, 98);
 }
 
-/* Clickable div styling */
 .div {
     border-radius: 20px;
     cursor: pointer;
