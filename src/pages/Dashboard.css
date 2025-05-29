@@ -1,59 +1,76 @@
 @import url('https://fonts.googleapis.com/css2?family=Coiny&family=Lexend:wght@100..900&family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Yatra+One&display=swap');
 
-.dashboard-page{
+.dashboard-page {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    height: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
     padding: 0 20px;
-    font-family: Poppins, sans-serif;
 }
-.dashboard-container{
+
+/* Main content container */
+.dashboard-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin: 250px 200px;
+    margin: 100px auto;
     width: 100%;
-    max-width: 1200px;
-    padding: 0 200px;
+    max-width: 1000px;
+    padding: 0 40px;
 }
-.button{
+
+/* Button style */
+.button {
     margin-top: 20px;
     background-color: rgb(4, 70, 252);
-    color:aliceblue;
+    color: aliceblue;
     padding: 10px 20px;
     width: fit-content;
     box-shadow: 0 0 5px rgb(72, 72, 72);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
-.button:hover{
+
+.button:hover {
     background-color: rgb(57, 110, 255);
-    color:aliceblue;
-    box-shadow: 0 0 5px rgb(72, 72, 72);
 }
-.topic{
+
+/* Topic heading */
+.topic {
     font-weight: 800;
     margin-top: 50px;
-    margin-left: 50px;
     font-size: 28px;
+    text-align: left;
 }
-.topic-container{
+
+/* Container for topic tiles/cards */
+.topic-container {
     display: flex;
-    flex-direction: row;
-    margin-left: 75px;
-    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 30px;
+    margin-top: 30px;
 }
-.topics{
+
+/* Topic text */
+.topics {
     font-size: 20px;
     color: rgb(98, 98, 98);
 }
-.div{
+
+/* Clickable div styling */
+.div {
     border-radius: 20px;
     cursor: pointer;
-    width:max-content;
-    padding: 0 20px;
+    width: max-content;
+    padding: 10px 20px;
     box-shadow: 2px 2px 10px blue;
+    transition: box-shadow 0.75s ease;
+    background-color: #fff;
 }
-.div:hover{
+
+.div:hover {
     box-shadow: 5px 5px 10px blue;
-    transition-duration: 0.75s;
 }
