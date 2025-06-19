@@ -5,12 +5,14 @@
     display: flex;
     flex-direction: row;
     position: fixed;
+    margin: 0 auto;
     height: 60px;
     top: 40px;
     width: 80%;
     z-index: 1000;
     align-items: center;
     justify-self: center;
+    justify-content: center;
     border-radius: 20px;
     background: rgb(0, 0, 0, 0.8);
     box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.4);
