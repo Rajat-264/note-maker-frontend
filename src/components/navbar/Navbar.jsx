@@ -3,6 +3,7 @@ import "./navbar.css";
 import { Link } from "react-router-dom";
 const Navbar = () => {
   return (
+    <div className="navbar-container">
     <div className="navbar">
       <div className="logo">
         Note Master
@@ -11,6 +12,7 @@ const Navbar = () => {
         <Link to="/dashboard" style={{textDecoration:"none"}} className="link">Home</Link>
         <Link to="/about" style={{textDecoration:"none"}} className="link">About</Link>    
       </div>
+    </div>
     </div>
   )
 }
