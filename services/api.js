@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'https://note-maker-backend-ioqg.onrender.com/api', 
+  baseURL: 'https://note-maker-backend-ecxb.onrender.com/api', 
 });
 
 API.interceptors.request.use((req) => {
