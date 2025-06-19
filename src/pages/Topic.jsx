@@ -69,7 +69,7 @@ export default function Topic() {
         <h2 className="header">Notes</h2>
         <ul className="space-y-2">
           {topic?.notes?.map((note, idx) => (
-            <ReactMarkdown key={idx} className="bg-gray-50 p-3 rounded shadow">
+            <ReactMarkdown key={idx} className="bg-gray-50 p-3 rounded shadow markdown-body">
               {note}
             </ReactMarkdown>
           ))}

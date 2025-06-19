@@ -48,12 +48,26 @@
     gap: 30px;
     justify-content: center;
     align-items: center;
-    margin-top: 25px;
+    margin: 25px auto;
 }
 
 .header {
     font-size: 24px;
     margin: 50px 0 20px 0;
+}
+
+.note .markdown-body,
+.note .bg-gray-50 {
+  font-family: 'Poppins', 'Inter', Arial, sans-serif !important;
+  font-size: 1rem;
+  white-space: pre-line; 
+}
+
+.note pre, .note code {
+  font-family: inherit !important;
+  background: none !important;
+  color: inherit !important;
+  font-size: 1rem !important;
 }
 
 @media (max-width: 768px) {
