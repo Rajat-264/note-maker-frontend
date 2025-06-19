@@ -49,6 +49,8 @@
     justify-content: center;
     align-items: center;
     margin: 25px auto;
+    word-break: break-word;    
+    overflow-wrap: anywhere;
 }
 
 .header {
@@ -60,7 +62,9 @@
 .note .bg-gray-50 {
   font-family: 'Poppins', 'Inter', Arial, sans-serif !important;
   font-size: 1rem;
-  white-space: pre-line; 
+  white-space: pre-line;
+  word-break: break-word;
+  overflow-wrap: anywhere; 
 }
 
 .note pre, .note code {
