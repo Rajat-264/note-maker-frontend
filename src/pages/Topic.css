@@ -43,10 +43,12 @@
 }
 
 .note {
-    padding-left: 0;
+    width: 65%;
     display: flex;
     flex-direction: column;
     gap: 30px;
+    justify-content: center;
+    align-items: center;
 }
 
 .header {
