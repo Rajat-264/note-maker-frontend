@@ -4,10 +4,12 @@ import Register from './pages/Auth/Register';
 import Dashboard from './pages/Dashboard';
 import Topic from './pages/Topic';
 import CreateTopic from './pages/CreateTopic';
+import Navbar from './components/Navbar';
 
 function App() {
   return (
     <Router>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
