@@ -44,7 +44,7 @@
 .nav-links {
     display: flex;
     flex-direction: row;
-    gap: 6rem;
+    gap: 4rem;
     justify-content: center;
     align-items: center;
     margin-left: 0; 
