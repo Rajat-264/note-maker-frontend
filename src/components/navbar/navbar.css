@@ -8,7 +8,6 @@
     position: fixed;
     align-items: center;
     justify-content: center;
-    margin: 20px 40px;
 }
 
 .navbar{
@@ -24,7 +23,7 @@
     justify-self: center;
     justify-content: center;
     border-radius: 20px;
-    background: rgb(0, 0, 0, 0.8);
+    background: rgba(0, 128, 255, 0.8);
     box-shadow: 6px 6px 10px rgba(0, 0, 0, 0.4);
     background-size: 300% 300%;
     backdrop-filter: blur(5px);
@@ -43,7 +42,7 @@
     margin-left: 640px;
     display: flex;
     flex-direction: row;
-    gap: 1.5rem;
+    gap: 3rem;
     justify-content: space-around;
     text-decoration: none;
 }
