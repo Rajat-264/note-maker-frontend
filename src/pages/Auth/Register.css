@@ -20,7 +20,7 @@
 
 .button{
     margin-top: 20px;
-    background-color: rgb(4, 70, 252);
+    background: rgb(4, 70, 252, 0.8);
     color:aliceblue;
     padding: 10px 20px;
     width: fit-content;
