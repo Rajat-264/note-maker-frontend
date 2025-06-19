@@ -21,7 +21,7 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    max-width: 1350px;
+    max-width: 1220px;
     height: 60px;
     margin: 40px auto 0 auto;
     border-radius: 30px;
@@ -44,7 +44,7 @@
 .nav-links {
     display: flex;
     flex-direction: row;
-    gap: 3rem;
+    gap: 6rem;
     justify-content: center;
     align-items: center;
     margin-left: 0; 
