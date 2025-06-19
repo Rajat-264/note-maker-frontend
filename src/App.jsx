@@ -4,7 +4,7 @@ import Register from './pages/Auth/Register';
 import Dashboard from './pages/Dashboard';
 import Topic from './pages/Topic';
 import CreateTopic from './pages/CreateTopic';
-import Navbar from './components/Navbar';
+import Navbar from './components/navbar/Navbar';
 
 function App() {
   return (
