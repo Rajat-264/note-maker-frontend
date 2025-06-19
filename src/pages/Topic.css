@@ -5,8 +5,9 @@
     flex-direction: column;
     justify-content: center;
     min-height: 100vh;
-    padding: 50px 10%;
+    padding: 20px 10%;
     overflow-x: hidden;
+    margin: 100px auto; 
 }
 
 .add-note {
