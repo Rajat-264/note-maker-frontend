@@ -54,13 +54,10 @@
 }
 
 .note-list {
-  width: 65%;
-  max-width: 100%;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 750px;
   padding: 0;
   list-style: none;
-  word-break: break-word;
-  overflow-wrap: anywhere;
 }
 
 .markdown-wrapper {
@@ -69,10 +66,12 @@
   padding: 1rem;
   border-radius: 6px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  overflow-x: auto;
   word-break: break-word;
+  overflow-wrap: anywhere;
+  width: 100%;
 }
 
+/* Markdown Styling */
 .markdown-body {
   font-family: 'Poppins', 'Inter', Arial, sans-serif;
   font-size: 1rem;
@@ -82,7 +81,6 @@
   overflow-wrap: anywhere;
 }
 
-/* Extra Markdown formatting */
 .markdown-body h1,
 .markdown-body h2,
 .markdown-body h3 {
@@ -105,7 +103,7 @@
   background: #f3f4f6;
   padding: 0.5rem;
   border-radius: 4px;
-  overflow-x: auto;
+  white-space: pre-wrap;
 }
 
 .markdown-body code {
@@ -118,7 +116,11 @@
 /* Responsive Styling */
 @media (max-width: 900px) {
   .note-list {
-    width: 95%;
+    max-width: 95%;
+  }
+
+  .markdown-wrapper {
+    max-width: 95%;
   }
 }
 
@@ -140,7 +142,6 @@
 
   .header {
     font-size: 20px;
-    margin-left: 0;
   }
 }
 
