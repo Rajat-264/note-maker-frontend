@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import API from '../../services/api';
 import './Topic.css';
 import ReactMarkdown from 'react-markdown';
+import 'github-markdown-css/github-markdown.css'; // Add this for markdown formatting
 
 export default function Topic() {
   const { id } = useParams();
@@ -22,7 +23,7 @@ export default function Topic() {
   };
 
   const handleImproveWithAI = async () => {
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem('token');
     try {
       const res = await fetch(`https://note-maker-ai-service.onrender.com/improve/${id}`, {
         method: 'POST',
@@ -69,10 +70,8 @@ export default function Topic() {
         <h2 className="header">Notes</h2>
         <ul className="note-list">
           {topic?.notes?.map((note, idx) => (
-            <li key={idx}>
-              <ReactMarkdown className="bg-gray-50 p-3 rounded shadow markdown-body">
-                {note}
-              </ReactMarkdown>
+            <li key={idx} className="markdown-wrapper">
+              <ReactMarkdown className="markdown-body">{note}</ReactMarkdown>
             </li>
           ))}
         </ul>
