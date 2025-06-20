@@ -71,7 +71,9 @@ export default function Topic() {
         <ul className="note-list">
           {topic?.notes?.map((note, idx) => (
             <li key={idx} className="markdown-wrapper">
-              <ReactMarkdown className="markdown-body">{note}</ReactMarkdown>
+              <div className="markdown-container">
+                <ReactMarkdown className="markdown-body">{note}</ReactMarkdown>
+              </div>
             </li>
           ))}
         </ul>

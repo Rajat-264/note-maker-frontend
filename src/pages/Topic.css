@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Coiny&family=Lexend:wght@100..900&family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Yatra+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Coiny&family=Lexend:wght@100..900&family=Outfit:wght@100..900&family=Poppins:wght@100..900&display=swap');
 
 .topic-page {
   display: flex;
@@ -9,6 +9,7 @@
   overflow-x: hidden;
   font-family: Poppins, sans-serif;
   margin: 150px 0;
+  padding: 0 1rem;
 }
 
 .add-note {
@@ -41,13 +42,11 @@
 }
 
 .note-list-container {
-  max-width: 750px;
   width: 100%;
+  max-width: 750px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  word-break: break-word;
-  overflow-wrap: anywhere;
 }
 
 .header {
@@ -64,20 +63,42 @@
 .markdown-wrapper {
   margin-bottom: 1.5rem;
   width: 100%;
-  word-break: break-word;
-  overflow-wrap: anywhere;
 }
 
-/* Markdown Styling */
+.markdown-container {
+  width: 100%;
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
 .markdown-body {
-  font-family: 'Poppins', 'Inter', Arial, sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-size: 1rem;
   line-height: 1.6;
-  white-space: pre-wrap;
   word-break: break-word;
-  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
+/* Deep fix for code/pre blocks */
+.markdown-body pre,
+.markdown-body code {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+  font-family: 'Courier New', monospace;
+  background: none;
+  padding: 0;
+  margin: 0;
+  border: none;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Markdown structural elements */
 .markdown-body h1,
 .markdown-body h2,
 .markdown-body h3 {
@@ -96,29 +117,7 @@
   list-style-type: disc;
 }
 
-/* Ensure code and pre never break layout */
-.markdown-body pre,
-.markdown-body code {
-  white-space: pre-wrap !important;
-  word-break: break-word !important;
-  font-family: 'Courier New', monospace;
-  background: none;
-  padding: 0;
-  border: none;
-  display: inline;
-  box-sizing: border-box;
-  overflow-x: hidden;
-}
-
 /* Responsive */
-@media (max-width: 900px) {
-  .note-list-container,
-  .note-list,
-  .markdown-wrapper {
-    max-width: 95%;
-  }
-}
-
 @media (max-width: 768px) {
   .topic-page {
     padding: 30px 5%;
@@ -135,6 +134,10 @@
 
   .header {
     font-size: 20px;
+  }
+
+  .note-list-container {
+    max-width: 95%;
   }
 }
 
