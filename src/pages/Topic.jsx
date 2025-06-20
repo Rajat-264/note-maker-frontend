@@ -65,13 +65,15 @@ export default function Topic() {
         </div>
       </div>
 
-      <div className="note">
+      <div className="note-list-container">
         <h2 className="header">Notes</h2>
-        <ul className="space-y-2">
+        <ul className="note-list">
           {topic?.notes?.map((note, idx) => (
-            <ReactMarkdown key={idx} className="bg-gray-50 p-3 rounded shadow markdown-body">
-              {note}
-            </ReactMarkdown>
+            <li key={idx}>
+              <ReactMarkdown className="bg-gray-50 p-3 rounded shadow markdown-body">
+                {note}
+              </ReactMarkdown>
+            </li>
           ))}
         </ul>
       </div>

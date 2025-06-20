@@ -74,6 +74,42 @@
   font-size: 1rem !important;
 }
 
+.note-list-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.note-list {
+  width: 65%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.note-list li {
+  margin-bottom: 1.5rem;
+}
+
+.markdown-body {
+  font-family: 'Poppins', 'Inter', Arial, sans-serif;
+  font-size: 1rem;
+  white-space: pre-line;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  background: #f8fafc;
+}
+
+@media (max-width: 900px) {
+  .note-list {
+    width: 98%;
+  }
+}
+
 @media (max-width: 768px) {
     .topic-page {
         padding: 30px 5%;
