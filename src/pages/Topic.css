@@ -12,7 +12,6 @@
 }
 
 .add-note {
-  padding-left: 0;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -43,10 +42,10 @@
 
 .note-list-container {
   max-width: 750px;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
   word-break: break-word;
   overflow-wrap: anywhere;
 }
@@ -58,20 +57,15 @@
 
 .note-list {
   width: 100%;
-  max-width: 750px;
   padding: 0;
   list-style: none;
 }
 
 .markdown-wrapper {
   margin-bottom: 1.5rem;
-  background: #f8fafc;
-  padding: 1rem;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  width: 100%;
   word-break: break-word;
   overflow-wrap: anywhere;
-  width: 100%;
 }
 
 /* Markdown Styling */
@@ -79,7 +73,7 @@
   font-family: 'Poppins', 'Inter', Arial, sans-serif;
   font-size: 1rem;
   line-height: 1.6;
-  white-space: pre-line;
+  white-space: pre-wrap;
   word-break: break-word;
   overflow-wrap: anywhere;
 }
@@ -102,27 +96,24 @@
   list-style-type: disc;
 }
 
+/* Ensure code and pre never break layout */
 .markdown-body pre,
 .markdown-body code {
-  white-space: pre-wrap !important;  
-  word-break: break-word !important; 
-  overflow-x: auto;
-  font-family: Poppins, sans-serif;
-  background: #f3f4f6;
-  padding: 0.5rem;
-  border-radius: 6px;
-  display: block;
-  width: 100%;
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+  font-family: 'Courier New', monospace;
+  background: none;
+  padding: 0;
+  border: none;
+  display: inline;
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
-
-/* Responsive Styling */
+/* Responsive */
 @media (max-width: 900px) {
-  .note-list {
-    max-width: 95%;
-  }
-
+  .note-list-container,
+  .note-list,
   .markdown-wrapper {
     max-width: 95%;
   }
@@ -134,8 +125,6 @@
   }
 
   .text-field {
-    width: 100%;
-    max-width: 100%;
     height: 100px;
   }
 
