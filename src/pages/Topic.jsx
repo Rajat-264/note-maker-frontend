@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import API from '../../services/api';
 import './Topic.css';
 import ReactMarkdown from 'react-markdown';
-import 'github-markdown-css/github-markdown.css';
 
 export default function Topic() {
   const { id } = useParams();
