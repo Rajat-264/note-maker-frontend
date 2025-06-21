@@ -164,7 +164,8 @@
 .markdown-body code {
   white-space: pre-wrap !important;   
   word-break: break-word !important;  
-  overflow-x: auto !important;        
+  overflow-x: auto !important;    
+  overflow-wrap: anywhere !important;    
   font-family: 'Courier New', monospace;
   background-color: #f6f8fa;
   padding: 0.5rem;
