@@ -165,12 +165,12 @@
   word-break: break-all !important;  
   overflow-x: auto !important;    
   overflow-wrap: anywhere !important;    
-  font-family: 'Courier New', monospace;
   background-color: #f6f8fa;
   padding: 0.5rem;
   border-radius: 6px;
   max-width: 100%;
   box-sizing: border-box;
+  font-family: 'Poppins', sans-serif !important;
 }
 
 .markdown-body pre > code {
