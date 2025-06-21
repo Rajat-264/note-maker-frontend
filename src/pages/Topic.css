@@ -157,6 +157,8 @@
   max-width: 100%;
   overflow-wrap: break-word;
   word-wrap: break-word;
+  font-family: 'Poppins', sans-serif !important;
+
 }
 
 .markdown-body pre,
@@ -177,6 +179,8 @@
   display: block;
   white-space: pre-wrap !important;
   overflow-x: auto;
+  font-family: 'Poppins', sans-serif !important;
+
 }
 
 .markdown-body a {
