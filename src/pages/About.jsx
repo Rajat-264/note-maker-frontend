@@ -13,8 +13,8 @@ export default function About() {
         <ul className="about-list">
           <li><strong>Quick Note-Taking:</strong> Paste or type notes into custom topics to keep your learning organized.</li>
           <li><strong>AI-Powered Improvements:</strong> Enhance your notes with better structure and clarity using powerful AI.</li>
-          <li><strong>Chrome Extension:</strong> Select text from any webpage and save it directly to your topics using shortcut key (Ctrl + Shift + S).</li>
-          <li><strong>PDF Export:</strong> Download neat, formatted versions of your notes for offline use.</li>
+          <li><strong>Chrome Extension:</strong> Select text from any webpage and save it directly to your topics using the shortcut key <strong>(Ctrl + Shift + S)</strong>.</li>
+          <li><strong>PDF Export:</strong> Download clean, formatted versions of your notes for offline use.</li>
           <li><strong>Coming Soon:</strong> Version history, Flashcard mode, note sharing, collaboration & more!</li>
         </ul>
 
@@ -27,7 +27,12 @@ export default function About() {
         </ol>
 
         <p className="about-footer">
-          Built by a passionate developer from <strong>NIT Calicut</strong>, Note Maker aims to make studying smarter, faster, and a little more fun.
+          Note Maker aims to make studying smarter, faster, more systematic — and a little more fun.
+        </p>
+        <p className="about-footer">
+          <strong>Contributor:</strong> Rajat Hande <br />
+          <strong>Note Maker © 2025</strong> <br />
+          📧 Drop me a mail at <a href="mailto:handerajat04@gmail.com">handerajat04@gmail.com</a> — I’d love to hear your thoughts!
         </p>
       </div>
     </div>
