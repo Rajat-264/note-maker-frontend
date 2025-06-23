@@ -3,6 +3,8 @@
   background-color: #f8f9fa;
   font-family: 'Poppins', sans-serif;
   min-height: 100vh;
+  justify-content: center;
+  align-items: center;
 }
 
 .about-container {
