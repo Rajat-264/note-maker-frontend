@@ -47,24 +47,38 @@ export default function Topic() {
   };
 
   const downloadAsPDF = async () => {
-    const element = document.getElementById('pdf-content');
-    if (!element) return;
+  const content = document.getElementById('pdf-content');
+  if (!content) return;
 
-    const canvas = await html2canvas(element, {
-      scale: 2,
-      useCORS: true,
-      logging: false,
-    });
+  const canvas = await html2canvas(content, {
+    scale: 2, 
+    useCORS: true,
+  });
 
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const imgProps = pdf.getImageProperties(imgData);
-    const imgHeight = (imgProps.height * pageWidth) / imgProps.width;
+  const imgData = canvas.toDataURL('image/png');
+  const pdf = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4',
+  });
 
-    pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, imgHeight);
-    pdf.save(`${topic?.title || 'topic'}.pdf`);
-  };
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+
+  const imgProps = pdf.getImageProperties(imgData);
+  const imgWidth = pageWidth - 20; 
+  const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+
+  let position = 10;
+
+  if (imgHeight < pageHeight) {
+    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+  } else {
+    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, pageHeight - 20);
+  }
+
+  pdf.save(`${topic?.title || 'notes'}.pdf`);
+};
 
   return (
     <div className="topic-page">
