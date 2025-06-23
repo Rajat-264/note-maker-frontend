@@ -8,8 +8,8 @@
   font-family: 'Poppins', sans-serif;
   padding: 2rem;
   box-sizing: border-box;
-  margin-top: 100px;
-    overflow-x: hidden;
+  margin: 100px 0px;
+  overflow-x: hidden;
 }
 
 .about-container {
@@ -39,7 +39,7 @@
 .about-text {
   font-size: 1.1rem;
   color: #333;
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
   margin-top: 1.5rem;
   line-height: 1.6;
 }
@@ -50,7 +50,7 @@
   font-size: 1.05rem;
   color: #444;
   line-height: 1.7;
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
 
 }
 
