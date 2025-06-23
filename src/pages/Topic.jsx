@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import API from '../../services/api';
 import './Topic.css';
 import ReactMarkdown from 'react-markdown';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 export default function Topic() {
   const { id } = useParams();
@@ -44,6 +46,26 @@ export default function Topic() {
     }
   };
 
+  const downloadAsPDF = async () => {
+    const element = document.getElementById('pdf-content');
+    if (!element) return;
+
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      logging: false,
+    });
+
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const imgProps = pdf.getImageProperties(imgData);
+    const imgHeight = (imgProps.height * pageWidth) / imgProps.width;
+
+    pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, imgHeight);
+    pdf.save(`${topic?.title || 'topic'}.pdf`);
+  };
+
   return (
     <div className="topic-page">
       <h1 className="title">{topic?.title}</h1>
@@ -62,51 +84,53 @@ export default function Topic() {
           <button onClick={handleImproveWithAI} className="button">
             ✨ Improve with AI
           </button>
+          <button onClick={downloadAsPDF} className="button">
+            🧾 Export as PDF
+          </button>
         </div>
       </div>
 
-      <div className="note-list-container">
-        <h2 className="header">Notes</h2>
+      <div className="note-list-container" id="pdf-content">
+        <h2 className="header">{topic?.title}</h2>
         <ul className="note-list">
           {topic?.notes?.map((note, idx) => (
             <li key={idx} className="markdown-wrapper">
               <div className="markdown-container">
                 <ReactMarkdown
                   components={{
-                  code({node, inline, className, children, ...props}) {
-                  return (
-                    <code
-                      style={{
-                      fontFamily: 'Poppins, sans-serif',
-                      whiteSpace: 'pre-wrap',
-                      wordBreak: 'break-word'
+                    code({ node, inline, className, children, ...props }) {
+                      return (
+                        <code
+                          style={{
+                            fontFamily: 'Poppins, sans-serif',
+                            whiteSpace: 'pre-wrap',
+                            wordBreak: 'break-word',
+                          }}
+                          {...props}
+                        >
+                          {children}
+                        </code>
+                      );
+                    },
+                    pre({ children }) {
+                      return (
+                        <pre
+                          style={{
+                            fontFamily: 'Poppins, sans-serif',
+                            whiteSpace: 'pre-wrap',
+                            wordBreak: 'break-word',
+                            overflowWrap: 'anywhere',
+                          }}
+                        >
+                          {children}
+                        </pre>
+                      );
+                    },
                   }}
-                  {...props}
-                  >
-                    {children}
-                  </code>
-              );
-            },
-              pre({ children }) {
-              return (
-              <pre
-                style={{
-                fontFamily: 'Poppins, sans-serif',
-                whiteSpace: 'pre-wrap',
-                wordBreak: 'break-word',
-                overflowWrap: 'anywhere'
-              }}
-              >
-                {children}
-              </pre>
-          );
-        }
-      }}
-  className="markdown-body"
-    >
-  {note}
-</ReactMarkdown>
-
+                  className="markdown-body"
+                >
+                  {note}
+                </ReactMarkdown>
               </div>
             </li>
           ))}
