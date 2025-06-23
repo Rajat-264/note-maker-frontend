@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard';
 import Topic from './pages/Topic';
 import CreateTopic from './pages/CreateTopic';
 import Navbar from './components/navbar/Navbar';
+import About from './pages/About';
 
 const AppContent = () => {
   const location = useLocation();
@@ -24,6 +25,8 @@ const AppContent = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/topic/:id" element={<Topic />} />
         <Route path="/create-topic" element={<CreateTopic />} />
+        <Route path="/about" element={<About />} />
+        
       </Routes>
     </>
   );
