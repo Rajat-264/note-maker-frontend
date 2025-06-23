@@ -17,6 +17,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html, body {
+  overflow-x: hidden;
+}
+
 /* Dark Mode (optional if prefers-color-scheme is set) */
 @media (prefers-color-scheme: dark) {
   :root {
