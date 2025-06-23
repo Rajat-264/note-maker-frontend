@@ -71,7 +71,42 @@ export default function Topic() {
           {topic?.notes?.map((note, idx) => (
             <li key={idx} className="markdown-wrapper">
               <div className="markdown-container">
-                <ReactMarkdown className="markdown-body">{note}</ReactMarkdown>
+                <ReactMarkdown
+                  components={{
+                  code({node, inline, className, children, ...props}) {
+                  return (
+                    <code
+                      style={{
+                      fontFamily: 'Poppins, sans-serif',
+                      whiteSpace: 'pre-wrap',
+                      wordBreak: 'break-word'
+                  }}
+                  {...props}
+                  >
+                    {children}
+                  </code>
+              );
+            },
+              pre({ children }) {
+              return (
+              <pre
+                style={{
+                fontFamily: 'Poppins, sans-serif',
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                overflowWrap: 'anywhere'
+              }}
+              >
+                {children}
+              </pre>
+          );
+        }
+      }}
+  className="markdown-body"
+    >
+  {note}
+</ReactMarkdown>
+
               </div>
             </li>
           ))}
