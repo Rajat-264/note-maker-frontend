@@ -118,16 +118,23 @@ export default function Topic() {
               <ul className="note-list" {...provided.droppableProps} ref={provided.innerRef}>
                 {topic?.notes?.map((note, idx) => (
                   <Draggable key={note.id} draggableId={note.id} index={idx}>
-                    {(provided) => (
-                      <li
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={provided.draggableProps.style}
-                        onClick={() => insertMode && setInsertIndex(idx + 1)}
-                        className={`markdown-wrapper ${insertMode && insertIndex === idx + 1 ? 'inserting' : ''}`}
-                      >
-                        <div className="markdown-container">
+                    {(provided, snapshot) => (
+                    <li
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      style={{
+                        ...provided.draggableProps.style,
+                              opacity: snapshot.isDragging ? 0.8 : 1,
+                            }}
+                              className={`markdown-wrapper ${insertMode && insertIndex === idx + 1 ? 'inserting' : ''}`}
+                          >
+                              <div className="drag-handle" {...provided.dragHandleProps}>
+                                ☰
+                              </div>
+                              <div 
+                                  className="markdown-container"
+                                  onClick={() => !snapshot.isDragging && insertMode && setInsertIndex(idx + 1)}
+                              >
                           <ReactMarkdown
                             components={{
                               code({ children, ...props }) {
