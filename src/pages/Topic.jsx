@@ -13,6 +13,10 @@ export default function Topic() {
   const [text, setText] = useState('');
   const [insertMode, setInsertMode] = useState(false);
   const [insertIndex, setInsertIndex] = useState(null);
+  const [mode, setMode] = useState('improve');
+  const [originalNotes, setOriginalNotes] = useState([]);
+  const [enhancedNotes, setEnhancedNotes] = useState([]);
+  const [showDiff, setShowDiff] = useState(false);
 
   useEffect(() => {
     API.get(`/topics/${id}`).then((res) => setTopic(res.data));
@@ -34,26 +38,38 @@ export default function Topic() {
     setInsertMode(false);
   };
 
-  const handleImproveWithAI = async () => {
+  const handleAIEnhancement = async () => {
     const token = localStorage.getItem('token');
     try {
-      const res = await fetch(`https://note-maker-ai-service.onrender.com/improve/${id}`, {
+      const res = await fetch(`https://note-maker-ai-service.onrender.com/enhance/${id}?mode=${mode}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });
 
       const data = await res.json();
       if (res.ok) {
-        alert(data.message || 'Topic improved successfully!');
-        const updated = await API.get(`/topics/${id}`);
-        setTopic(updated.data);
+        setOriginalNotes(data.originalNotes);
+        setEnhancedNotes(data.improvedNotes);
+        setShowDiff(true);
       } else {
-        alert(data.message || 'AI improvement failed.');
+        alert(data.message || 'AI enhancement failed.');
       }
     } catch (err) {
       console.error('Improvement error:', err);
-      alert('An error occurred while improving the notes.');
+      alert('An error occurred while enhancing notes.');
     }
+  };
+
+  const acceptChanges = async () => {
+    await API.put(`/topics/${id}/updateNotes`, { notes: enhancedNotes });
+    const updated = await API.get(`/topics/${id}`);
+    setTopic(updated.data);
+    setShowDiff(false);
+  };
+
+  const rejectChanges = () => {
+    setShowDiff(false);
+    setEnhancedNotes([]);
   };
 
   const downloadAsPDF = async () => {
@@ -70,21 +86,6 @@ export default function Topic() {
     pdf.save(`${topic?.title || 'notes'}.pdf`);
   };
 
-  const handleDragEnd = async (result) => {
-    if (!result.destination) return;
-
-    setInsertIndex(null);
-  setInsertMode(false);
-
-    const reorderedNotes = Array.from(topic.notes);
-    const [moved] = reorderedNotes.splice(result.source.index, 1);
-    reorderedNotes.splice(result.destination.index, 0, moved);
-
-    await API.put(`/topics/${id}/updateNotes`, { notes: reorderedNotes });
-    const updated = await API.get(`/topics/${id}`);
-    setTopic(updated.data);
-  };
-
   return (
     <div className="topic-page">
       <h1 className="title">{topic?.title}</h1>
@@ -98,46 +99,68 @@ export default function Topic() {
         />
         <div className="flex gap-3 mt-2">
           <button onClick={handleAddNote} className="button">+ Add Note</button>
+          <select value={mode} onChange={(e) => setMode(e.target.value)} className="button">
+            <option value="improve">✨ Improve</option>
+            <option value="summarize">📌 Summarize</option>
+            <option value="expand">📖 Expand</option>
+            <option value="formal">🧑‍💼 Formal</option>
+            <option value="flashcards">🗂️ Flashcards</option>
+            <option value="simplify">😄 Simplify</option>
+          </select>
+          <button onClick={handleAIEnhancement} className="button">🚀 Enhance with AI</button>
+          <button onClick={downloadAsPDF} className="button">🧾 Export as PDF</button>
           <button onClick={() => setInsertMode(!insertMode)} className={`button ${insertMode ? 'active' : ''}`}>
             {insertMode ? '🛑 Cancel Insert Mode' : '🖊️ Set Insert Position'}
           </button>
-          <button onClick={handleImproveWithAI} className="button">✨ Improve with AI</button>
-          <button onClick={downloadAsPDF} className="button">🧾 Export as PDF</button>
         </div>
         {insertMode && insertIndex !== null && (
           <p className="note-position-indicator">Inserting at position: {insertIndex + 1}</p>
         )}
       </div>
 
-      <div className="note-list-container" id="pdf-content">
-  <h2 className="header">{topic?.title}</h2>
-  <ul className="note-list">
-    {topic?.notes?.map((note, idx) => (
-      <li
-        key={note.id}
-        className={`markdown-wrapper ${insertMode && insertIndex === idx + 1 ? 'inserting' : ''}`}
-        onClick={() => insertMode && setInsertIndex(idx + 1)}
-      >
-        <div className="markdown-container">
-          <ReactMarkdown
-            components={{
-              code({ children, ...props }) {
-                return <code style={{ whiteSpace: 'pre-wrap' }} {...props}>{children}</code>;
-              },
-              pre({ children }) {
-                return <pre style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{children}</pre>;
-              },
-            }}
-            className="markdown-body"
-          >
-            {note.content}
-          </ReactMarkdown>
-        </div>
-      </li>
-    ))}
-  </ul>
-</div>
+      {showDiff && (
+        <div className="diff-preview">
+          <h3>Original Notes</h3>
+          <div className="diff-box">{originalNotes.join('\n')}</div>
 
+          <h3>Enhanced Notes ({mode})</h3>
+          <div className="diff-box enhanced">{enhancedNotes.join('\n')}</div>
+
+          <div className="flex gap-3 mt-2">
+            <button onClick={acceptChanges} className="button">✅ Accept</button>
+            <button onClick={rejectChanges} className="button">❌ Reject</button>
+          </div>
+        </div>
+      )}
+
+      <div className="note-list-container" id="pdf-content">
+        <h2 className="header">{topic?.title}</h2>
+        <ul className="note-list">
+          {topic?.notes?.map((note, idx) => (
+            <li
+              key={note.id}
+              className={`markdown-wrapper ${insertMode && insertIndex === idx + 1 ? 'inserting' : ''}`}
+              onClick={() => insertMode && setInsertIndex(idx + 1)}
+            >
+              <div className="markdown-container">
+                <ReactMarkdown
+                  components={{
+                    code({ children, ...props }) {
+                      return <code style={{ whiteSpace: 'pre-wrap' }} {...props}>{children}</code>;
+                    },
+                    pre({ children }) {
+                      return <pre style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{children}</pre>;
+                    },
+                  }}
+                  className="markdown-body"
+                >
+                  {note.content}
+                </ReactMarkdown>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

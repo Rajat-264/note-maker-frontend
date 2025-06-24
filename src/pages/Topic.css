@@ -330,3 +330,27 @@
     padding-left: 0.8rem;
   }
 }
+
+.diff-preview {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #f9f9f9;
+  border-radius: 12px;
+}
+
+.diff-box {
+  background-color: #f3f3f3;
+  padding: 1rem;
+  white-space: pre-wrap;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  font-family: 'Poppins', sans-serif;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.diff-box.enhanced {
+  background-color: #e9f7ef;
+  border-color: #28a745;
+}
