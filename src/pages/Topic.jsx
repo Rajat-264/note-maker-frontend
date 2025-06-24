@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { nanoid } from 'nanoid';
 
 export default function Topic() {
   const { id } = useParams();
@@ -20,12 +21,11 @@ export default function Topic() {
 
   const handleAddNote = async () => {
     if (!text.trim()) return;
-
     const notes = topic?.notes || [];
+    const newNote = { id: nanoid(), content: text };
     const newNotes = [...notes];
     const position = insertIndex !== null ? insertIndex : notes.length;
-
-    newNotes.splice(position, 0, text);
+    newNotes.splice(position, 0, newNote);
 
     await API.put(`/topics/${id}/updateNotes`, { notes: newNotes });
     setText('');
@@ -44,7 +44,6 @@ export default function Topic() {
       });
 
       const data = await res.json();
-
       if (res.ok) {
         alert(data.message || 'Topic improved successfully!');
         const updated = await API.get(`/topics/${id}`);
@@ -61,24 +60,20 @@ export default function Topic() {
   const downloadAsPDF = async () => {
     const content = document.getElementById('pdf-content');
     if (!content) return;
-
     const canvas = await html2canvas(content, { scale: 2, useCORS: true });
     const imgData = canvas.toDataURL('image/png');
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-
     const pageWidth = pdf.internal.pageSize.getWidth();
-    const pageHeight = pdf.internal.pageSize.getHeight();
     const imgProps = pdf.getImageProperties(imgData);
     const imgWidth = pageWidth - 20;
     const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
-
-    const position = 10;
-    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+    pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
     pdf.save(`${topic?.title || 'notes'}.pdf`);
   };
 
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
+
     const reorderedNotes = Array.from(topic.notes);
     const [moved] = reorderedNotes.splice(result.source.index, 1);
     reorderedNotes.splice(result.destination.index, 0, moved);
@@ -100,15 +95,9 @@ export default function Topic() {
           onChange={(e) => setText(e.target.value)}
         />
         <div className="flex gap-3 mt-2">
-          <button onClick={handleAddNote} className="button">
-            + Add Note
-          </button>
-          <button onClick={handleImproveWithAI} className="button">
-            ✨ Improve with AI
-          </button>
-          <button onClick={downloadAsPDF} className="button">
-            🧾 Export as PDF
-          </button>
+          <button onClick={handleAddNote} className="button">+ Add Note</button>
+          <button onClick={handleImproveWithAI} className="button">✨ Improve with AI</button>
+          <button onClick={downloadAsPDF} className="button">🧾 Export as PDF</button>
           <button onClick={() => setInsertMode(!insertMode)} className={`button ${insertMode ? 'active' : ''}`}>
             {insertMode ? '🛑 Cancel Insert Mode' : '🖊️ Set Insert Position'}
           </button>
@@ -125,7 +114,7 @@ export default function Topic() {
             {(provided) => (
               <ul className="note-list" {...provided.droppableProps} ref={provided.innerRef}>
                 {topic?.notes?.map((note, idx) => (
-                  <Draggable key={idx} draggableId={`note-${idx}`} index={idx}>
+                  <Draggable key={note.id} draggableId={note.id} index={idx}>
                     {(provided) => (
                       <li
                         ref={provided.innerRef}
@@ -137,27 +126,16 @@ export default function Topic() {
                         <div className="markdown-container">
                           <ReactMarkdown
                             components={{
-                              code({ node, inline, className, children, ...props }) {
-                                return (
-                                  <code
-                                    style={{ fontFamily: 'Poppins, sans-serif', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
-                                    {...props}
-                                  >
-                                    {children}
-                                  </code>
-                                );
+                              code({ children, ...props }) {
+                                return <code style={{ whiteSpace: 'pre-wrap' }} {...props}>{children}</code>;
                               },
                               pre({ children }) {
-                                return (
-                                  <pre style={{ fontFamily: 'Poppins, sans-serif', whiteSpace: 'pre-wrap', wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
-                                    {children}
-                                  </pre>
-                                );
+                                return <pre style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{children}</pre>;
                               },
                             }}
                             className="markdown-body"
                           >
-                            {note}
+                            {note.content}
                           </ReactMarkdown>
                         </div>
                       </li>
