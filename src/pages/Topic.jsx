@@ -5,11 +5,13 @@ import './Topic.css';
 import ReactMarkdown from 'react-markdown';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 export default function Topic() {
   const { id } = useParams();
   const [topic, setTopic] = useState(null);
   const [text, setText] = useState('');
+  const [insertMode, setInsertMode] = useState(false);
   const [insertIndex, setInsertIndex] = useState(null);
 
   useEffect(() => {
@@ -25,11 +27,12 @@ export default function Topic() {
 
     newNotes.splice(position, 0, text);
 
-    await API.put(`topics/${id}/updateNotes`, { notes: newNotes });
+    await API.put(`/topics/${id}`, { notes: newNotes });
     setText('');
     const updated = await API.get(`/topics/${id}`);
     setTopic(updated.data);
     setInsertIndex(null);
+    setInsertMode(false);
   };
 
   const handleImproveWithAI = async () => {
@@ -59,34 +62,30 @@ export default function Topic() {
     const content = document.getElementById('pdf-content');
     if (!content) return;
 
-    const canvas = await html2canvas(content, {
-      scale: 2,
-      useCORS: true,
-    });
-
+    const canvas = await html2canvas(content, { scale: 2, useCORS: true });
     const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4',
-    });
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
-
     const imgProps = pdf.getImageProperties(imgData);
     const imgWidth = pageWidth - 20;
     const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
 
-    let position = 10;
-
-    if (imgHeight < pageHeight) {
-      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-    } else {
-      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, pageHeight - 20);
-    }
-
+    const position = 10;
+    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
     pdf.save(`${topic?.title || 'notes'}.pdf`);
+  };
+
+  const handleDragEnd = async (result) => {
+    if (!result.destination) return;
+    const reorderedNotes = Array.from(topic.notes);
+    const [moved] = reorderedNotes.splice(result.source.index, 1);
+    reorderedNotes.splice(result.destination.index, 0, moved);
+
+    await API.put(`/topics/${id}`, { notes: reorderedNotes });
+    const updated = await API.get(`/topics/${id}`);
+    setTopic(updated.data);
   };
 
   return (
@@ -110,70 +109,66 @@ export default function Topic() {
           <button onClick={downloadAsPDF} className="button">
             🧾 Export as PDF
           </button>
+          <button onClick={() => setInsertMode(!insertMode)} className={`button ${insertMode ? 'active' : ''}`}>
+            {insertMode ? '🛑 Cancel Insert Mode' : '🖊️ Set Insert Position'}
+          </button>
         </div>
+        {insertMode && insertIndex !== null && (
+          <p className="note-position-indicator">Inserting at position: {insertIndex + 1}</p>
+        )}
       </div>
 
       <div className="note-list-container" id="pdf-content">
         <h2 className="header">{topic?.title}</h2>
-        <ul className="note-list">
-          {topic?.notes?.map((note, idx) => (
-            <div key={idx}>
-              <button
-                className={`insert-btn ${insertIndex === idx ? 'selected' : ''}`}
-                onClick={() => setInsertIndex(idx)}
-              >
-                ➕ Insert Here
-              </button>
-              <li className="markdown-wrapper">
-                <div className="markdown-container">
-                  <ReactMarkdown
-                    components={{
-                      code({ children, ...props }) {
-                        return (
-                          <code
-                            style={{
-                              fontFamily: 'Poppins, sans-serif',
-                              whiteSpace: 'pre-wrap',
-                              wordBreak: 'break-word',
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="notes">
+            {(provided) => (
+              <ul className="note-list" {...provided.droppableProps} ref={provided.innerRef}>
+                {topic?.notes?.map((note, idx) => (
+                  <Draggable key={idx} draggableId={`note-${idx}`} index={idx}>
+                    {(provided) => (
+                      <li
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        onClick={() => insertMode && setInsertIndex(idx + 1)}
+                        className={`markdown-wrapper ${insertMode && insertIndex === idx + 1 ? 'inserting' : ''}`}
+                      >
+                        <div className="markdown-container">
+                          <ReactMarkdown
+                            components={{
+                              code({ node, inline, className, children, ...props }) {
+                                return (
+                                  <code
+                                    style={{ fontFamily: 'Poppins, sans-serif', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+                                    {...props}
+                                  >
+                                    {children}
+                                  </code>
+                                );
+                              },
+                              pre({ children }) {
+                                return (
+                                  <pre style={{ fontFamily: 'Poppins, sans-serif', whiteSpace: 'pre-wrap', wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
+                                    {children}
+                                  </pre>
+                                );
+                              },
                             }}
-                            {...props}
+                            className="markdown-body"
                           >
-                            {children}
-                          </code>
-                        );
-                      },
-                      pre({ children }) {
-                        return (
-                          <pre
-                            style={{
-                              fontFamily: 'Poppins, sans-serif',
-                              whiteSpace: 'pre-wrap',
-                              wordBreak: 'break-word',
-                              overflowWrap: 'anywhere',
-                            }}
-                          >
-                            {children}
-                          </pre>
-                        );
-                      },
-                    }}
-                    className="markdown-body"
-                  >
-                    {note}
-                  </ReactMarkdown>
-                </div>
-              </li>
-            </div>
-          ))}
-
-          {/* Insert at End */}
-          <button
-            className={`insert-btn ${insertIndex === topic?.notes?.length ? 'selected' : ''}`}
-            onClick={() => setInsertIndex(topic?.notes?.length)}
-          >
-            ➕ Insert at End
-          </button>
-        </ul>
+                            {note}
+                          </ReactMarkdown>
+                        </div>
+                      </li>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </DragDropContext>
       </div>
     </div>
   );

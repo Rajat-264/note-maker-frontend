@@ -252,6 +252,24 @@
   border-color: #4a90e2;
 }
 
+.note-position-indicator {
+  margin-top: 6px;
+  font-size: 14px;
+  font-style: italic;
+  color: #555;
+}
+
+.markdown-wrapper.inserting {
+  background-color: #f3faff;
+  border: 2px dashed #007acc;
+  border-radius: 8px;
+}
+
+.button.active {
+  background-color: #007acc;
+  color: white;
+}
+
 
 /* Responsive styles */
 @media (max-width: 768px) {
