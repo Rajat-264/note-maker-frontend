@@ -149,7 +149,7 @@ export default function Topic() {
               </div>
               ))}
           </div>
-          </div>
+        </div>
 
           <div className="flex gap-3 mt-2">
             <button onClick={acceptChanges} className="button">✅ Accept</button>
