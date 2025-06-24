@@ -58,7 +58,7 @@
   gap: 20px;
 }
 
-.button {
+.button2 {
   background-color: rgba(4, 70, 252, 0.8);
   color: aliceblue;
   padding: 10px 20px;
@@ -79,7 +79,7 @@
   width: fit-content;
   box-shadow: 0 0 5px rgb(72, 72, 72);
   border: 2px solid black;
-  border-radius: 4px;
+  border-radius: 15px;
   cursor: pointer;
   font-family: 'Poppins', sans-serif;
   font-weight: bold;

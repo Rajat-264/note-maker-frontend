@@ -104,10 +104,10 @@ export default function Topic() {
           onChange={(e) => setText(e.target.value)}
         />
         <div className="buttons">
-          <button onClick={() => setInsertMode(!insertMode)} className={`button ${insertMode ? 'active' : ''}`}>
+          <button onClick={() => setInsertMode(!insertMode)} className={`button2 ${insertMode ? 'active' : ''}`}>
             {insertMode ? '🛑 Cancel Insert Mode' : '🖊️ Set Insert Position'}
           </button>
-          <button onClick={handleAddNote} className="button">+ Add Note</button>
+          <button onClick={handleAddNote} className="button2">+ Add Note</button>
         </div>
         <div className="buttons"> 
           <select value={mode} onChange={(e) => setMode(e.target.value)} className="button1">
@@ -118,10 +118,10 @@ export default function Topic() {
             <option value="flashcards">🗂️ Flashcards</option>
             <option value="simplify">😄 Simplify</option>
           </select>
-          <button onClick={handleAIEnhancement} className="button">🚀 Enhance with AI</button>
+          <button onClick={handleAIEnhancement} className="button2">🚀 Enhance with AI</button>
         </div>
         <div className="buttons">
-          <button onClick={downloadAsPDF} className="button">🧾 Export as PDF</button>
+          <button onClick={downloadAsPDF} className="button2">🧾 Export as PDF</button>
         </div>
           
         {insertMode && insertIndex !== null && (
