@@ -272,46 +272,6 @@
   color: white;
 }
 
-[data-rbd-draggable-context-id] {
-  margin-bottom: 12px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-/* Dragging state */
-[data-rbd-drag-handle-dragging="true"] {
-  background-color: #f8f9fa;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
-}
-
-/* Drop placeholder */
-[data-rbd-placeholder-context-id] {
-  background-color: #e9ecef;
-  border-radius: 4px;
-  margin-bottom: 12px;
-}
-
-/* Disable insert mode during drag */
-[data-rbd-drag-handle-dragging="true"] ~ .markdown-wrapper {
-  pointer-events: none;
-}
-
-/* Improved drag container */
-.note-list {
-  min-height: 100px;
-  transition: background-color 0.2s ease;
-}
-
-/* Visual feedback for droppable area */
-[data-rbd-droppable-context-id][data-rbd-droppable-id="notes"] {
-  transition: background-color 0.2s ease;
-}
-
-[data-rbd-droppable-context-id][data-rbd-droppable-id="notes"].is-dragging-over {
-  background-color: #f0f7ff;
-}
-
-/* Responsive styles */
 @media (max-width: 768px) {
   .topic-page {
     margin: 100px 0;

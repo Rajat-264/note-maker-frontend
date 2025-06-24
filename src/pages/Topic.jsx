@@ -5,7 +5,6 @@ import './Topic.css';
 import ReactMarkdown from 'react-markdown';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { nanoid } from 'nanoid';
 
 export default function Topic() {
@@ -111,54 +110,34 @@ export default function Topic() {
       </div>
 
       <div className="note-list-container" id="pdf-content">
-        <h2 className="header">{topic?.title}</h2>
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <Droppable droppableId="notes">
-            {(provided) => (
-              <ul className="note-list" {...provided.droppableProps} ref={provided.innerRef}>
-                {topic?.notes?.map((note, idx) => (
-                  <Draggable key={note.id} draggableId={note.id} index={idx}>
-                    {(provided, snapshot) => (
-                    <li
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      style={{
-                        ...provided.draggableProps.style,
-                              opacity: snapshot.isDragging ? 0.8 : 1,
-                            }}
-                              className={`markdown-wrapper ${insertMode && insertIndex === idx + 1 ? 'inserting' : ''}`}
-                          >
-                              <div className="drag-handle" {...provided.dragHandleProps}>
-                                ☰
-                              </div>
-                              <div 
-                                  className="markdown-container"
-                                  onClick={() => !snapshot.isDragging && insertMode && setInsertIndex(idx + 1)}
-                              >
-                          <ReactMarkdown
-                            components={{
-                              code({ children, ...props }) {
-                                return <code style={{ whiteSpace: 'pre-wrap' }} {...props}>{children}</code>;
-                              },
-                              pre({ children }) {
-                                return <pre style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{children}</pre>;
-                              },
-                            }}
-                            className="markdown-body"
-                          >
-                            {note.content}
-                          </ReactMarkdown>
-                        </div>
-                      </li>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </ul>
-            )}
-          </Droppable>
-        </DragDropContext>
-      </div>
+  <h2 className="header">{topic?.title}</h2>
+  <ul className="note-list">
+    {topic?.notes?.map((note, idx) => (
+      <li
+        key={note.id}
+        className={`markdown-wrapper ${insertMode && insertIndex === idx + 1 ? 'inserting' : ''}`}
+        onClick={() => insertMode && setInsertIndex(idx + 1)}
+      >
+        <div className="markdown-container">
+          <ReactMarkdown
+            components={{
+              code({ children, ...props }) {
+                return <code style={{ whiteSpace: 'pre-wrap' }} {...props}>{children}</code>;
+              },
+              pre({ children }) {
+                return <pre style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere' }}>{children}</pre>;
+              },
+            }}
+            className="markdown-body"
+          >
+            {note.content}
+          </ReactMarkdown>
+        </div>
+      </li>
+    ))}
+  </ul>
+</div>
+
     </div>
   );
 }
