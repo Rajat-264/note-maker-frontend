@@ -66,6 +66,20 @@
   transition: background-color 0.2s;
 }
 
+.button1 {
+  background-color: aliceblue;
+  color: rgba(4, 70, 252, 0.8);
+  padding: 10px 20px;
+  width: fit-content;
+  box-shadow: 0 0 5px rgb(72, 72, 72);
+  border: 2px solid black;
+  border-radius: 15px;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
 .button:hover {
   background-color: rgba(4, 70, 252, 1);
 }
