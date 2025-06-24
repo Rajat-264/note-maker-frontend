@@ -5,16 +5,39 @@ import './Dashboard.css';
 
 export default function Dashboard() {
   const [topics, setTopics] = useState([]);
+  const [filteredTopics, setFilteredTopics] = useState([]);
   const [user, setUser] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    API.get('/topics').then((res) => setTopics(res.data));
+    const fetchData = async () => {
+      try {
+        const topicRes = await API.get('/topics');
+        setTopics(topicRes.data);
+        setFilteredTopics(topicRes.data); // Initially show all
+        const userRes = await API.get('/auth/me');
+        setUser(userRes.data);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+      }
+    };
 
-    API.get('/auth/me')
-      .then((res) => setUser(res.data))
-      .catch((err) => console.error('Failed to fetch user:', err));
+    fetchData();
   }, []);
+
+  useEffect(() => {
+    const term = searchTerm.trim().toLowerCase();
+    if (term === '') {
+      setFilteredTopics(topics);
+    } else {
+      setFilteredTopics(
+        topics.filter((topic) =>
+          topic.title.toLowerCase().includes(term)
+        )
+      );
+    }
+  }, [searchTerm, topics]);
 
   return (
     <div className="dashboard-page">
@@ -39,28 +62,25 @@ export default function Dashboard() {
             type="text"
             placeholder="Search topics..."
             className="search-input"
-            onChange={(e) => {
-              const searchTerm = e.target.value.toLowerCase();
-              setTopics((prevTopics) =>
-                prevTopics.filter((topic) =>
-                  topic.title.toLowerCase().includes(searchTerm)
-                )
-              );
-            }}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
-    
         <div className="topic-container">
-          {topics.map((topic) => (
-            <div
-              key={topic._id}
-              onClick={() => navigate(`/topic/${topic._id}`)}
-              className="div"
-            >
-              <h2 className="topics">{topic.title}</h2>
-            </div>
-          ))}
+          {filteredTopics.length > 0 ? (
+            filteredTopics.map((topic) => (
+              <div
+                key={topic._id}
+                onClick={() => navigate(`/topic/${topic._id}`)}
+                className="topic-card"
+              >
+                <h2 className="topics">{topic.title}</h2>
+              </div>
+            ))
+          ) : (
+            <p className="no-results">No topics found.</p>
+          )}
         </div>
       </div>
     </div>

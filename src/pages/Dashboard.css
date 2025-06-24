@@ -68,3 +68,12 @@
 .div:hover {
     box-shadow: 5px 5px 10px blue;
 }
+
+.search-input{
+    border-radius: 10px;
+    width: 300px;
+    height: 15px;
+    font-family: Poppins, sans-serif;
+    padding: 10px;
+    border: 2px solid rgb(80, 80, 80);
+}
