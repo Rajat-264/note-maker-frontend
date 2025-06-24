@@ -73,7 +73,7 @@ export default function Dashboard() {
               <div
                 key={topic._id}
                 onClick={() => navigate(`/topic/${topic._id}`)}
-                className="topic-card"
+                className="div"
               >
                 <h2 className="topics">{topic.title}</h2>
               </div>
