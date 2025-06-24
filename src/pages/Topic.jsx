@@ -124,7 +124,6 @@ export default function Topic() {
           <button onClick={downloadAsPDF} className="button">🧾 Export as PDF</button>
         </div>
           
-        </div>
         {insertMode && insertIndex !== null && (
           <p className="note-position-indicator">Inserting at position: {insertIndex + 1}</p>
         )}
