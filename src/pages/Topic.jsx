@@ -24,7 +24,7 @@ export default function Topic() {
     const notes = topic?.notes || [];
     const newNote = { id: nanoid(), content: text };
     const newNotes = [...notes];
-    const position = insertIndex !== null ? insertIndex : notes.length;
+    const position = insertMode && insertIndex !== null ? insertIndex : newNotes.length;
     newNotes.splice(position, 0, newNote);
 
     await API.put(`/topics/${id}/updateNotes`, { notes: newNotes });
@@ -73,6 +73,9 @@ export default function Topic() {
 
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
+
+    setInsertIndex(null);
+  setInsertMode(false);
 
     const reorderedNotes = Array.from(topic.notes);
     const [moved] = reorderedNotes.splice(result.source.index, 1);
