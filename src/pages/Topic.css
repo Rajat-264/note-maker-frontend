@@ -334,6 +334,7 @@
 .diff-preview {
   margin-top: 2rem;
   padding: 1rem;
+  max-width: 900px; 
   background: #f9f9f9;
   border-radius: 12px;
 }
