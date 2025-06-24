@@ -10,6 +10,7 @@ export default function Topic() {
   const { id } = useParams();
   const [topic, setTopic] = useState(null);
   const [text, setText] = useState('');
+  const [insertIndex, setInsertIndex] = useState(null);
 
   useEffect(() => {
     API.get(`/topics/${id}`).then((res) => setTopic(res.data));
@@ -17,10 +18,18 @@ export default function Topic() {
 
   const handleAddNote = async () => {
     if (!text.trim()) return;
-    await API.post(`/topics/${id}/notes`, { content: text });
+
+    const notes = topic?.notes || [];
+    const newNotes = [...notes];
+    const position = insertIndex !== null ? insertIndex : notes.length;
+
+    newNotes.splice(position, 0, text);
+
+    await API.put(`topics/${id}/updateNotes`, { notes: newNotes });
     setText('');
     const updated = await API.get(`/topics/${id}`);
     setTopic(updated.data);
+    setInsertIndex(null);
   };
 
   const handleImproveWithAI = async () => {
@@ -47,38 +56,38 @@ export default function Topic() {
   };
 
   const downloadAsPDF = async () => {
-  const content = document.getElementById('pdf-content');
-  if (!content) return;
+    const content = document.getElementById('pdf-content');
+    if (!content) return;
 
-  const canvas = await html2canvas(content, {
-    scale: 2, 
-    useCORS: true,
-  });
+    const canvas = await html2canvas(content, {
+      scale: 2,
+      useCORS: true,
+    });
 
-  const imgData = canvas.toDataURL('image/png');
-  const pdf = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'a4',
-  });
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+    });
 
-  const pageWidth = pdf.internal.pageSize.getWidth();
-  const pageHeight = pdf.internal.pageSize.getHeight();
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
 
-  const imgProps = pdf.getImageProperties(imgData);
-  const imgWidth = pageWidth - 20; 
-  const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+    const imgProps = pdf.getImageProperties(imgData);
+    const imgWidth = pageWidth - 20;
+    const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
 
-  let position = 10;
+    let position = 10;
 
-  if (imgHeight < pageHeight) {
-    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
-  } else {
-    pdf.addImage(imgData, 'PNG', 10, position, imgWidth, pageHeight - 20);
-  }
+    if (imgHeight < pageHeight) {
+      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+    } else {
+      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, pageHeight - 20);
+    }
 
-  pdf.save(`${topic?.title || 'notes'}.pdf`);
-};
+    pdf.save(`${topic?.title || 'notes'}.pdf`);
+  };
 
   return (
     <div className="topic-page">
@@ -108,46 +117,62 @@ export default function Topic() {
         <h2 className="header">{topic?.title}</h2>
         <ul className="note-list">
           {topic?.notes?.map((note, idx) => (
-            <li key={idx} className="markdown-wrapper">
-              <div className="markdown-container">
-                <ReactMarkdown
-                  components={{
-                    code({ node, inline, className, children, ...props }) {
-                      return (
-                        <code
-                          style={{
-                            fontFamily: 'Poppins, sans-serif',
-                            whiteSpace: 'pre-wrap',
-                            wordBreak: 'break-word',
-                          }}
-                          {...props}
-                        >
-                          {children}
-                        </code>
-                      );
-                    },
-                    pre({ children }) {
-                      return (
-                        <pre
-                          style={{
-                            fontFamily: 'Poppins, sans-serif',
-                            whiteSpace: 'pre-wrap',
-                            wordBreak: 'break-word',
-                            overflowWrap: 'anywhere',
-                          }}
-                        >
-                          {children}
-                        </pre>
-                      );
-                    },
-                  }}
-                  className="markdown-body"
-                >
-                  {note}
-                </ReactMarkdown>
-              </div>
-            </li>
+            <div key={idx}>
+              <button
+                className={`insert-btn ${insertIndex === idx ? 'selected' : ''}`}
+                onClick={() => setInsertIndex(idx)}
+              >
+                ➕ Insert Here
+              </button>
+              <li className="markdown-wrapper">
+                <div className="markdown-container">
+                  <ReactMarkdown
+                    components={{
+                      code({ children, ...props }) {
+                        return (
+                          <code
+                            style={{
+                              fontFamily: 'Poppins, sans-serif',
+                              whiteSpace: 'pre-wrap',
+                              wordBreak: 'break-word',
+                            }}
+                            {...props}
+                          >
+                            {children}
+                          </code>
+                        );
+                      },
+                      pre({ children }) {
+                        return (
+                          <pre
+                            style={{
+                              fontFamily: 'Poppins, sans-serif',
+                              whiteSpace: 'pre-wrap',
+                              wordBreak: 'break-word',
+                              overflowWrap: 'anywhere',
+                            }}
+                          >
+                            {children}
+                          </pre>
+                        );
+                      },
+                    }}
+                    className="markdown-body"
+                  >
+                    {note}
+                  </ReactMarkdown>
+                </div>
+              </li>
+            </div>
           ))}
+
+          {/* Insert at End */}
+          <button
+            className={`insert-btn ${insertIndex === topic?.notes?.length ? 'selected' : ''}`}
+            onClick={() => setInsertIndex(topic?.notes?.length)}
+          >
+            ➕ Insert at End
+          </button>
         </ul>
       </div>
     </div>
