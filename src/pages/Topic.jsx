@@ -132,8 +132,9 @@ export default function Topic() {
       {showDiff && (
         <div className="diff-container">
         <div className="diff-preview">
-          <h3>Original Notes</h3>
+          
           <div className="diff-box">
+            <h3>Original Notes</h3>
               {originalNotes.map((note, i) => (
                 <div key={i}>
                   <ReactMarkdown>{note.content || note}</ReactMarkdown>
@@ -141,8 +142,9 @@ export default function Topic() {
               ))}
           </div>
 
-          <h3>Enhanced Notes ({mode})</h3>
+          
           <div className="diff-box enhanced">
+            <h3>Enhanced Notes ({mode})</h3>
             {enhancedNotes.map((note, i) => (
               <div key={i}>
                 <ReactMarkdown>{note.content || note}</ReactMarkdown>
