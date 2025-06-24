@@ -34,6 +34,23 @@ export default function Dashboard() {
 
         <h2 className="topic">Your Topics</h2>
 
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search topics..."
+            className="search-input"
+            onChange={(e) => {
+              const searchTerm = e.target.value.toLowerCase();
+              setTopics((prevTopics) =>
+                prevTopics.filter((topic) =>
+                  topic.title.toLowerCase().includes(searchTerm)
+                )
+              );
+            }}
+          />
+        </div>
+
+    
         <div className="topic-container">
           {topics.map((topic) => (
             <div
