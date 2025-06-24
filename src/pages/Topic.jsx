@@ -104,10 +104,12 @@ export default function Topic() {
           onChange={(e) => setText(e.target.value)}
         />
         <div className="buttons">
-          <button onClick={handleAddNote} className="button">+ Add Note</button>
           <button onClick={() => setInsertMode(!insertMode)} className={`button ${insertMode ? 'active' : ''}`}>
             {insertMode ? '🛑 Cancel Insert Mode' : '🖊️ Set Insert Position'}
           </button>
+          <button onClick={handleAddNote} className="button">+ Add Note</button>
+        </div>
+        <div className="buttons"> 
           <select value={mode} onChange={(e) => setMode(e.target.value)} className="button1">
             <option value="improve">✨ Improve</option>
             <option value="summarize">📌 Summarize</option>
@@ -117,7 +119,10 @@ export default function Topic() {
             <option value="simplify">😄 Simplify</option>
           </select>
           <button onClick={handleAIEnhancement} className="button">🚀 Enhance with AI</button>
+        </div>
+        <div className="buttons">
           <button onClick={downloadAsPDF} className="button">🧾 Export as PDF</button>
+        </div>
           
         </div>
         {insertMode && insertIndex !== null && (
