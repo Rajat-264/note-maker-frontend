@@ -123,6 +123,7 @@ export default function Topic() {
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
+                        style={provided.draggableProps.style}
                         onClick={() => insertMode && setInsertIndex(idx + 1)}
                         className={`markdown-wrapper ${insertMode && insertIndex === idx + 1 ? 'inserting' : ''}`}
                       >
