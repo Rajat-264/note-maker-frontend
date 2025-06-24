@@ -27,7 +27,7 @@ export default function Topic() {
 
     newNotes.splice(position, 0, text);
 
-    await API.put(`/topics/${id}updateNotes`, { notes: newNotes });
+    await API.put(`/topics/${id}/updateNotes`, { notes: newNotes });
     setText('');
     const updated = await API.get(`/topics/${id}`);
     setTopic(updated.data);
