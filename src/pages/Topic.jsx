@@ -98,11 +98,11 @@ export default function Topic() {
         />
         <div className="flex gap-3 mt-2">
           <button onClick={handleAddNote} className="button">+ Add Note</button>
-          <button onClick={handleImproveWithAI} className="button">✨ Improve with AI</button>
-          <button onClick={downloadAsPDF} className="button">🧾 Export as PDF</button>
           <button onClick={() => setInsertMode(!insertMode)} className={`button ${insertMode ? 'active' : ''}`}>
             {insertMode ? '🛑 Cancel Insert Mode' : '🖊️ Set Insert Position'}
           </button>
+          <button onClick={handleImproveWithAI} className="button">✨ Improve with AI</button>
+          <button onClick={downloadAsPDF} className="button">🧾 Export as PDF</button>
         </div>
         {insertMode && insertIndex !== null && (
           <p className="note-position-indicator">Inserting at position: {insertIndex + 1}</p>
