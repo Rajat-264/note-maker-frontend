@@ -83,7 +83,7 @@ export default function Topic() {
     const [moved] = reorderedNotes.splice(result.source.index, 1);
     reorderedNotes.splice(result.destination.index, 0, moved);
 
-    await API.put(`/topics/${id}`, { notes: reorderedNotes });
+    await API.put(`/topics/${id}/updateNotes`, { notes: reorderedNotes });
     const updated = await API.get(`/topics/${id}`);
     setTopic(updated.data);
   };
