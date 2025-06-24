@@ -61,11 +61,17 @@ export default function Topic() {
   };
 
   const acceptChanges = async () => {
-    await API.put(`/topics/${id}/updateNotes`, { notes: enhancedNotes });
-    const updated = await API.get(`/topics/${id}`);
-    setTopic(updated.data);
-    setShowDiff(false);
-  };
+  const formattedNotes = enhancedNotes.map((note) => {
+    if (typeof note === 'object' && note.id && note.content) return note;
+    return { id: nanoid(), content: note };
+  });
+
+  await API.put(`/topics/${id}/updateNotes`, { notes: formattedNotes });
+  const updated = await API.get(`/topics/${id}`);
+  setTopic(updated.data);
+  setShowDiff(false);
+};
+
 
   const rejectChanges = () => {
     setShowDiff(false);
@@ -121,10 +127,22 @@ export default function Topic() {
       {showDiff && (
         <div className="diff-preview">
           <h3>Original Notes</h3>
-          <div className="diff-box">{originalNotes.join('\n')}</div>
+          <div className="diff-box">
+              {originalNotes.map((note, i) => (
+                <div key={i}>
+                  <ReactMarkdown>{note.content || note}</ReactMarkdown>
+                </div>
+              ))}
+          </div>
 
           <h3>Enhanced Notes ({mode})</h3>
-          <div className="diff-box enhanced">{enhancedNotes.join('\n')}</div>
+          <div className="diff-box enhanced">
+            {enhancedNotes.map((note, i) => (
+              <div key={i}>
+                <ReactMarkdown>{note.content || note}</ReactMarkdown>
+              </div>
+              ))}
+          </div>
 
           <div className="flex gap-3 mt-2">
             <button onClick={acceptChanges} className="button">✅ Accept</button>
