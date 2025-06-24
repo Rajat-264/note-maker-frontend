@@ -103,7 +103,7 @@ export default function Topic() {
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <div className="flex gap-3 mt-2">
+        <div className="buttons">
           <button onClick={handleAddNote} className="button">+ Add Note</button>
           <select value={mode} onChange={(e) => setMode(e.target.value)} className="button">
             <option value="improve">✨ Improve</option>
@@ -125,6 +125,7 @@ export default function Topic() {
       </div>
 
       {showDiff && (
+        <div className="diff-container">
         <div className="diff-preview">
           <h3>Original Notes</h3>
           <div className="diff-box">
@@ -142,6 +143,7 @@ export default function Topic() {
                 <ReactMarkdown>{note.content || note}</ReactMarkdown>
               </div>
               ))}
+          </div>
           </div>
 
           <div className="flex gap-3 mt-2">
