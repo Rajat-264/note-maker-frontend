@@ -15,14 +15,15 @@ export default function About() {
           <li><strong>AI-Powered Improvements:</strong> Enhance your notes with better structure and clarity using powerful AI.</li>
           <li><strong>Chrome Extension:</strong> Select text from any webpage and save it directly to your topics using the shortcut key <strong>(Ctrl + Shift + S)</strong>.</li>
           <li><strong>PDF Export:</strong> Download clean, formatted versions of your notes for offline use.</li>
-          <li><strong>Coming Soon:</strong> Version history, Flashcard mode, note sharing, collaboration & more!</li>
+          <li><strong>Coming Soon:</strong> Note sharing, collaboration & more!</li>
         </ul>
 
         <h2 className="about-subtitle">🚀 How It Works</h2>
         <ol className="about-steps">
           <li><strong>Create a Topic</strong> — A space to collect all your notes on a subject.</li>
-          <li><strong>Add Notes</strong> — Write or paste information easily.</li>
-          <li><strong>Click “Improve with AI”</strong> — Watch your notes transform into polished content.</li>
+          <li><strong>Add Notes</strong> — Write or paste information easily, wherever you wish.</li>
+          <li><strong>Click “Enhance with AI”</strong> — Watch your notes transform into polished content, that too customizable.</li>
+          <li><strong>Preview</strong> — Preview and option of choosing/dropping the AI enhanced version of notes.</li>
           <li><strong>Download as PDF</strong> — Export your notes and take them anywhere.</li>
         </ol>
 
