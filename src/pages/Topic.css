@@ -65,6 +65,7 @@
   gap: 30px;
   border: 2px solid rgb(80, 80, 80);
   border-radius: 15px;
+  width: fit-content;
 }
 
 .button2 {
