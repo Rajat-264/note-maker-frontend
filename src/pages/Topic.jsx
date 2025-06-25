@@ -109,7 +109,7 @@ export default function Topic() {
           </button>
           <button onClick={handleAddNote} className="button2">+ Add Note</button>
         </div>
-        <div className="buttons"> 
+        <div className="buttons1"> 
           <select value={mode} onChange={(e) => setMode(e.target.value)} className="button1">
             <option value="improve">✨ Improve</option>
             <option value="summarize">📌 Summarize</option>
