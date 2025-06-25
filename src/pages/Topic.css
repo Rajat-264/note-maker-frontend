@@ -388,4 +388,7 @@
 .diff-box.enhanced {
   background-color: #e9f7ef;
   border-color: #28a745;
+  max-width: 550px;
+  max-height: 650px;
+  overflow-y: auto;
 }
