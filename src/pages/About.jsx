@@ -15,7 +15,7 @@ export default function About() {
           <li><strong>AI-Powered Improvements:</strong> Enhance your notes with better structure and clarity using powerful AI.</li>
           <li><strong>Chrome Extension:</strong> Select text from any webpage and save it directly to your topics using the shortcut key <strong>(Ctrl + Shift + S)</strong>.</li>
           <li><strong>PDF Export:</strong> Download clean, formatted versions of your notes for offline use.</li>
-          <li><strong>Coming Soon:</strong> Note sharing, collaboration & more!</li>
+          <li><strong>Coming Soon:</strong> Mobile support, Note sharing, collaboration & more!</li>
         </ul>
 
         <h2 className="about-subtitle">🚀 How It Works</h2>
