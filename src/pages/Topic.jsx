@@ -61,17 +61,16 @@ export default function Topic() {
   };
 
   const acceptChanges = async () => {
-  const formattedNotes = enhancedNotes.map((note) => {
-    if (typeof note === 'object' && note.id && note.content) return note;
-    return { id: nanoid(), content: note };
-  });
+    const formattedNotes = enhancedNotes.map((note) => {
+      if (typeof note === 'object' && note.id && note.content) return note;
+      return { id: nanoid(), content: note };
+    });
 
-  await API.put(`/topics/${id}/updateNotes`, { notes: formattedNotes });
-  const updated = await API.get(`/topics/${id}`);
-  setTopic(updated.data);
-  setShowDiff(false);
-};
-
+    await API.put(`/topics/${id}/updateNotes`, { notes: formattedNotes });
+    const updated = await API.get(`/topics/${id}`);
+    setTopic(updated.data);
+    setShowDiff(false);
+  };
 
   const rejectChanges = () => {
     setShowDiff(false);
@@ -94,7 +93,7 @@ export default function Topic() {
 
   return (
     <div className="topic-page">
-      <h1 className="title">{topic?.title}</h1>
+      <h1 className="title">📝 {topic?.title}</h1>
 
       <div className="add-note">
         <textarea
@@ -103,12 +102,14 @@ export default function Topic() {
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
+
         <div className="buttons">
           <button onClick={() => setInsertMode(!insertMode)} className={`button2 ${insertMode ? 'active' : ''}`}>
             {insertMode ? '🛑 Cancel Insert Mode' : '🖊️ Set Insert Position'}
           </button>
           <button onClick={handleAddNote} className="button2">+ Add Note</button>
         </div>
+
         <div className="buttons1"> 
           <select value={mode} onChange={(e) => setMode(e.target.value)} className="button1">
             <option value="improve">✨ Improve</option>
@@ -120,10 +121,11 @@ export default function Topic() {
           </select>
           <button onClick={handleAIEnhancement} className="button2">🚀 Enhance with AI</button>
         </div>
+
         <div className="buttons">
           <button onClick={downloadAsPDF} className="button2">🧾 Export as PDF</button>
         </div>
-          
+
         {insertMode && insertIndex !== null && (
           <p className="note-position-indicator">Inserting at position: {insertIndex + 1}</p>
         )}
@@ -131,27 +133,25 @@ export default function Topic() {
 
       {showDiff && (
         <div className="diff-container">
-        <div className="diff-preview">
-          
-          <div className="diff-box">
-            <h3>Original Notes</h3>
+          <div className="diff-preview">
+            <div className="diff-box">
+              <h3>Original Notes</h3>
               {originalNotes.map((note, i) => (
                 <div key={i}>
                   <ReactMarkdown>{note.content || note}</ReactMarkdown>
                 </div>
               ))}
-          </div>
+            </div>
 
-          
-          <div className="diff-box enhanced">
-            <h3>Enhanced Notes ({mode})</h3>
-            {enhancedNotes.map((note, i) => (
-              <div key={i}>
-                <ReactMarkdown>{note.content || note}</ReactMarkdown>
-              </div>
+            <div className="diff-box enhanced">
+              <h3>Enhanced Notes ({mode})</h3>
+              {enhancedNotes.map((note, i) => (
+                <div key={i}>
+                  <ReactMarkdown>{note.content || note}</ReactMarkdown>
+                </div>
               ))}
+            </div>
           </div>
-        </div>
 
           <div className="flex gap-3 mt-2">
             <button onClick={acceptChanges} className="button">✅ Accept</button>
@@ -161,7 +161,7 @@ export default function Topic() {
       )}
 
       <div className="note-list-container" id="pdf-content">
-        <h2 className="header">{topic?.title}</h2>
+        <h2 className="header">📚 {topic?.title}</h2>
         <ul className="note-list">
           {topic?.notes?.map((note, idx) => (
             <li
