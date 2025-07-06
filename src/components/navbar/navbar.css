@@ -34,16 +34,16 @@
     color: white;
     font-style: normal; 
     font-size: 30px; 
-    margin-left: 5%;
+    margin-left: 6rem;
 }
 
 .nav-links {
     display: flex;
     flex-direction: row;
-    gap: 4rem;
+    gap: 6rem;
     justify-content: center;
     align-items: center;
-    margin-right: 5%
+    margin-right: 6rem;
 }
 
 .link {
