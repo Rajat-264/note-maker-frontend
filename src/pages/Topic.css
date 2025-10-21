@@ -1,23 +1,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Coiny&family=Lexend:wght@100..900&family=Outfit:wght@100..900&family=Poppins:wght@100..900&display=swap');
 
-.title {
-  font-size: 2rem;
-  margin: 3rem;
-  text-align: center;
-  max-width: 100%;
-  word-wrap: break-word;
+:root {
+  --bg-color: #fafafa;
+  --panel-bg: #ffffff;
+  --panel-border: #e0e0e0;
+  --text-color: #1e1e1e;
+  --note-bg: #ffffff;
+  --note-hover: #f5f5f5;
+  --accent-color: #0078ff;
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-medium: rgba(0, 0, 0, 0.15);
+  --border-radius: 10px;
+  --font-family: 'Poppins', sans-serif;
 }
 
+/* ---------- Page Layout ---------- */
 .topic-page {
   display: flex;
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  background: #121212;
-  color: #fff;
-  padding-left: 120px; /* leave space for floating panel */
+  background: var(--bg-color);
+  color: var(--text-color);
+  padding-left: 120px; /* Space for floating panel */
+  font-family: var(--font-family);
 }
 
+.title {
+  font-size: 2rem;
+  margin: 3rem;
+  text-align: center;
+  word-wrap: break-word;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+/* ---------- Floating Sidebar ---------- */
 .floating-panel {
   position: fixed;
   left: 20px;
@@ -26,51 +44,63 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  background: #1e1e1e;
+  background: var(--panel-bg);
   padding: 14px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 10px var(--shadow-light);
+  border: 1px solid var(--panel-border);
 }
 
 .panel-button {
-  background: #2d2d2d;
-  border: none;
-  color: #fff;
+  background: #ffffff;
+  border: 1px solid var(--panel-border);
+  color: var(--text-color);
   padding: 8px 12px;
   border-radius: 6px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
   font-size: 0.9rem;
-}
-.panel-button:hover {
-  background: #3c3c3c;
+  text-align: left;
 }
 
+.panel-button:hover {
+  background: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
+}
+
+/* ---------- Notes Container ---------- */
 .note-list-container {
   width: 70%;
   max-width: 800px;
   margin-top: 20px;
-  background: #181818;
+  background: var(--note-bg);
   padding: 20px;
-  border-radius: 10px;
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 6px var(--shadow-light);
   cursor: text;
+  transition: background 0.3s;
+  border: 1px solid var(--panel-border);
 }
 
 .note-block {
   outline: none;
-  padding: 6px 10px;
+  padding: 10px 14px;
   font-size: 1rem;
   border-radius: 6px;
   margin-bottom: 4px;
   min-height: 22px;
-  transition: background 0.2s;
   white-space: pre-wrap;
+  line-height: 1.5;
+  transition: background 0.2s;
 }
+
 .note-block:focus {
-  background: #2b2b2b;
+  background: var(--note-hover);
+  box-shadow: 0 0 0 2px var(--accent-color + "20");
 }
 
-
+/* ---------- Diff Section ---------- */
 .diff-container {
   display: flex;
   flex-direction: column;
@@ -86,53 +116,55 @@
 .diff-box {
   flex: 1;
   padding: 10px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  color: #333;
+  background: #ffffff;
+  border-radius: var(--border-radius);
+  color: var(--text-color);
+  border: 1px solid var(--panel-border);
+  box-shadow: 0 1px 4px var(--shadow-light);
 }
 
 .diff-box.enhanced {
-  background: #eaeaea;
+  background: #f6faff;
+  border-color: var(--accent-color);
 }
 
-.add-note {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  max-width: 850px;
-}
-
-.text-field {
-  border-radius: 8px;
-  width: 100%;
-  max-width: 100%;
-  height: 150px;
-  font-family: 'Poppins', sans-serif;
-  padding: 10px;
-  border: 2px solid rgb(80, 80, 80);
-  resize: vertical;
-  box-sizing: border-box;
-  font-size: 14px;
-}
-
+/* ---------- Buttons ---------- */
 .button {
-  background-color: #f8f9fa;
-  color: #213547;
+  background-color: var(--accent-color);
+  color: white;
   padding: 10px 20px;
   width: fit-content;
-  box-shadow: 0 0 5px rgb(72, 72, 72);
+  box-shadow: 0 2px 6px var(--shadow-light);
   border: none;
   border-radius: 15px;
   cursor: pointer;
-  font-family: 'Poppins', sans-serif;
-  font-weight: bold;
+  font-family: var(--font-family);
+  font-weight: 600;
   font-size: 1rem;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .button:hover {
-  background-color: #0486ff;
+  background-color: #0062d1;
+  box-shadow: 0 4px 10px var(--shadow-medium);
 }
 
-
+/* ---------- Textarea (AI mode dropdown etc.) ---------- */
+.text-field {
+  border-radius: 8px;
+  width: 100%;
+  height: 150px;
+  font-family: var(--font-family);
+  padding: 10px;
+  border: 1.5px solid var(--panel-border);
+  resize: vertical;
+  box-sizing: border-box;
+  font-size: 14px;
+  background: var(--note-bg);
+  color: var(--text-color);
+}
+.text-field:focus {
+  border-color: var(--accent-color);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-color + "25");
+}
