@@ -166,14 +166,13 @@ export default function Topic() {
         </div>
       )}
 
-      <div className="note-list-container" id="pdf-content" onClick={handleClickOutside}>
+      <div className="note-list-container" id="pdf-content" onClick={handleClickOutside} contentEditable suppressContentEditableWarning>
         {topic?.notes?.map((note, idx) => (
           <div
             key={note.id}
             id={`note-${note.id}`}
             ref={(el) => noteRefs.current[note.id] = el}
-            contentEditable
-            suppressContentEditableWarning
+            
             className="note-block"
             onInput={(e) => handleEditNote(note.id, e.currentTarget.innerText)}
             onKeyDown={(e) => handleKeyDown(e, idx)}

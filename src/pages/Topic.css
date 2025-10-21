@@ -20,6 +20,86 @@
   word-wrap: break-word;
 }
 
+.topic-page {
+  padding-left: 180px; /* leave space for floating panel */
+}
+
+.floating-panel {
+  position: fixed;
+  left: 0;
+  top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  background: #1f1f1f;
+  border-right: 1px solid #333;
+  height: calc(100vh - 50px);
+  width: 160px;
+}
+
+.panel-button {
+  padding: 8px;
+  border-radius: 6px;
+  border: none;
+  background: #2b2b2b;
+  color: #fff;
+  cursor: pointer;
+  text-align: left;
+}
+
+.panel-button:hover {
+  background: #3a3a3a;
+}
+
+.note-list-container {
+  cursor: text;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #1e1e1e;
+  min-height: 300px;
+}
+
+.note-block {
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  padding: 8px 12px;
+  margin: 4px 0;
+  border-radius: 6px;
+  transition: background 0.2s;
+  color: #e0e0e0;
+  background-color: #2b2b2b;
+}
+
+.note-block:focus {
+  background-color: #3a3a3a;
+}
+
+.diff-container {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0;
+}
+
+.diff-preview {
+  display: flex;
+  gap: 20px;
+}
+
+.diff-box {
+  flex: 1;
+  padding: 10px;
+  background: #1f1f1f;
+  border-radius: 8px;
+  color: #fff;
+}
+
+.diff-box.enhanced {
+  background: #282828;
+}
+
+
 .add-note {
   display: flex;
   flex-direction: column;
