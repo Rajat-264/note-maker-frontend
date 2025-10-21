@@ -71,17 +71,15 @@
 
 /* ---------- Notes Container ---------- */
 .note-list-container {
-  width: 70%;
-  max-width: 800px;
+  width: 85%;
+  max-width: 1200px;
   margin-top: 20px;
-  background: var(--note-bg);
+  background: var(--container-bg);
   padding: 20px;
-  border-radius: var(--border-radius);
-  box-shadow: 0 2px 6px var(--shadow-light);
+  border-radius: 10px;
   cursor: text;
-  transition: background 0.3s;
-  border: 1px solid var(--panel-border);
 }
+
 
 .note-block {
   outline: none;

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import API from '../../services/api';
 import './Topic.css';
@@ -17,12 +17,12 @@ export default function Topic() {
   const [showDiff, setShowDiff] = useState(false);
   const noteRefs = useRef({});
 
-  // Fetch topic
+  // ✅ Fetch topic once
   useEffect(() => {
     API.get(`/topics/${id}`).then((res) => setTopic(res.data));
   }, [id]);
 
-  // Debounced auto-save
+  // ✅ Debounced auto-save
   useEffect(() => {
     if (!topic?.notes) return;
     const timeout = setTimeout(() => {
@@ -31,14 +31,17 @@ export default function Topic() {
     return () => clearTimeout(timeout);
   }, [topic?.notes]);
 
-  // --- Editing Logic ---
-  const handleEditNote = (noteId, e) => {
-    const content = e.target.innerText.replace(/\n+$/, ''); // remove trailing newlines
-    setTopic((prev) => ({
-      ...prev,
-      notes: prev.notes.map((n) => (n.id === noteId ? { ...n, content } : n)),
-    }));
-  };
+  // ✅ Cursor-stable edit handling
+  const handleEditNote = useCallback((noteId, e) => {
+    const content = e.target.innerText.replace(/\n+$/, '');
+    setTopic((prev) => {
+      if (!prev) return prev;
+      const updatedNotes = prev.notes.map((n) =>
+        n.id === noteId ? { ...n, content } : n
+      );
+      return { ...prev, notes: updatedNotes };
+    });
+  }, []);
 
   const handleKeyDown = (e, idx) => {
     if (e.key === 'Enter') {
@@ -47,6 +50,7 @@ export default function Topic() {
       const updated = [...topic.notes];
       updated.splice(idx + 1, 0, newNote);
       setTopic((prev) => ({ ...prev, notes: updated }));
+
       setTimeout(() => {
         const next = noteRefs.current[newNote.id];
         next?.focus();
@@ -55,6 +59,7 @@ export default function Topic() {
       e.preventDefault();
       const updated = topic.notes.filter((_, i) => i !== idx);
       setTopic((prev) => ({ ...prev, notes: updated }));
+
       setTimeout(() => {
         const prevBlock = noteRefs.current[topic.notes[idx - 1]?.id];
         prevBlock?.focus();
@@ -72,7 +77,7 @@ export default function Topic() {
     }
   };
 
-  // --- AI Enhancement ---
+  // ✅ AI Enhancement
   const handleAIEnhancement = async () => {
     const token = localStorage.getItem('token');
     try {
@@ -109,7 +114,7 @@ export default function Topic() {
     setEnhancedNotes([]);
   };
 
-  // --- PDF Export ---
+  // ✅ Export PDF
   const downloadAsPDF = async () => {
     const content = document.getElementById('pdf-content');
     if (!content) return;
@@ -130,7 +135,8 @@ export default function Topic() {
     <div className="topic-page">
       {/* Floating Sidebar */}
       <div className="floating-panel">
-        <button className="panel-button" onClick={() => navigate('/dashboard')}>⬅️ Back</button>
+        <button className="panel-button" onClick={() => navigate('/dashboard')}>⬅ Back</button>
+
         <select value={mode} onChange={(e) => setMode(e.target.value)} className="panel-button">
           <option value="improve">✨ Improve</option>
           <option value="summarize">📌 Summarize</option>
@@ -139,7 +145,8 @@ export default function Topic() {
           <option value="flashcards">🗂️ Flashcards</option>
           <option value="simplify">😄 Simplify</option>
         </select>
-        <button className="panel-button" onClick={handleAIEnhancement}>🚀 Enhance with AI</button>
+
+        <button className="panel-button" onClick={handleAIEnhancement}>🚀 Enhance</button>
         <button className="panel-button" onClick={downloadAsPDF}>🧾 Export PDF</button>
       </div>
 
@@ -154,20 +161,26 @@ export default function Topic() {
                 <div key={i}><ReactMarkdown>{note.content || note}</ReactMarkdown></div>
               ))}
             </div>
+
             <div className="diff-box enhanced">
-              <h3>Enhanced Notes ({mode})</h3>
+              <h3>Enhanced ({mode})</h3>
               {enhancedNotes.map((note, i) => (
                 <div key={i}><ReactMarkdown>{note.content || note}</ReactMarkdown></div>
               ))}
             </div>
           </div>
+
           <div className="flex gap-3 mt-2">
             <button onClick={acceptChanges} className="button">✅ Accept</button>
             <button onClick={rejectChanges} className="button">❌ Reject</button>
           </div>
         </div>
       ) : (
-        <div className="note-list-container" id="pdf-content" onClick={handleClickOutside}>
+        <div
+          className="note-list-container"
+          id="pdf-content"
+          onClick={handleClickOutside}
+        >
           {topic?.notes?.map((note, idx) => (
             <div
               key={note.id}
