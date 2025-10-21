@@ -64,15 +64,23 @@ export default function Topic() {
   };
 
   const handleClickOutside = (e) => {
-    if (e.target.classList.contains('note-list-container')) {
-      const newNote = { id: nanoid(), content: '' };
-      setTopic((prev) => ({ ...prev, notes: [...prev.notes, newNote] }));
-      setTimeout(() => {
-        const nextBlock = noteRefs.current[newNote.id];
-        if (nextBlock) nextBlock.focus();
-      }, 0);
-    }
-  };
+  const noteBlocks = document.querySelectorAll('.note-block');
+  const selectedNoteBlock = Array.from(noteBlocks).find((block) => block.isFocused());
+
+  if (selectedNoteBlock) {
+    // If a note block is selected, do nothing
+    return;
+  }
+
+  if (e.target.classList.contains('note-list-container')) {
+    const newNote = { id: nanoid(), content: '' };
+    setTopic((prev) => ({ ...prev, notes: [...prev.notes, newNote] }));
+    setTimeout(() => {
+      const nextBlock = noteRefs.current[newNote.id];
+      if (nextBlock) nextBlock.focus();
+    }, 0);
+  }
+};
 
   // AI Enhancement
   const handleAIEnhancement = async () => {
