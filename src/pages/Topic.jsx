@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import API from '../../services/api';
 import './Topic.css';
 import ReactMarkdown from 'react-markdown';
@@ -9,11 +9,13 @@ import { nanoid } from 'nanoid';
 
 export default function Topic() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [topic, setTopic] = useState(null);
   const [mode, setMode] = useState('improve');
   const [originalNotes, setOriginalNotes] = useState([]);
   const [enhancedNotes, setEnhancedNotes] = useState([]);
   const [showDiff, setShowDiff] = useState(false);
+  const noteRefs = useRef({}); // Store refs to contentEditable divs
 
   // Fetch topic
   useEffect(() => {
@@ -29,15 +31,16 @@ export default function Topic() {
     return () => clearTimeout(timeout);
   }, [topic?.notes]);
 
-  // Inline note editing
+  // Edit note
   const handleEditNote = (noteId, content) => {
     setTopic((prev) => ({
       ...prev,
-      notes: prev.notes.map((n) => (n.id === noteId ? { ...n, content } : n)),
+      notes: prev.notes.map((n) =>
+        n.id === noteId ? { ...n, content } : n
+      ),
     }));
   };
 
-  // Handle Enter & Backspace in contentEditable blocks
   const handleKeyDown = (e, idx) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -46,23 +49,26 @@ export default function Topic() {
       updated.splice(idx + 1, 0, newNote);
       setTopic((prev) => ({ ...prev, notes: updated }));
       setTimeout(() => {
-        const nextBlock = document.querySelector(`#note-${newNote.id}`);
+        const nextBlock = noteRefs.current[newNote.id];
         if (nextBlock) nextBlock.focus();
       }, 0);
     } else if (e.key === 'Backspace' && !e.currentTarget.innerText.trim()) {
       e.preventDefault();
       const updated = topic.notes.filter((_, i) => i !== idx);
       setTopic((prev) => ({ ...prev, notes: updated }));
+      setTimeout(() => {
+        const prevBlock = noteRefs.current[topic.notes[idx - 1]?.id];
+        if (prevBlock) prevBlock.focus();
+      }, 0);
     }
   };
 
-  // Click outside to add new block
   const handleClickOutside = (e) => {
     if (e.target.classList.contains('note-list-container')) {
       const newNote = { id: nanoid(), content: '' };
       setTopic((prev) => ({ ...prev, notes: [...prev.notes, newNote] }));
       setTimeout(() => {
-        const nextBlock = document.querySelector(`#note-${newNote.id}`);
+        const nextBlock = noteRefs.current[newNote.id];
         if (nextBlock) nextBlock.focus();
       }, 0);
     }
@@ -103,7 +109,6 @@ export default function Topic() {
     setEnhancedNotes([]);
   };
 
-  // Export to PDF
   const downloadAsPDF = async () => {
     const content = document.getElementById('pdf-content');
     if (!content) return;
@@ -120,10 +125,10 @@ export default function Topic() {
 
   return (
     <div className="topic-page">
-      <h1 className="title">📝 {topic?.title}</h1>
-
-      <div className="buttons1">
-        <select value={mode} onChange={(e) => setMode(e.target.value)} className="button1">
+      {/* Floating Sidebar */}
+      <div className="floating-panel">
+        <button className="panel-button" onClick={() => navigate('/dashboard')}>⬅️ Back</button>
+        <select value={mode} onChange={(e) => setMode(e.target.value)} className="panel-button">
           <option value="improve">✨ Improve</option>
           <option value="summarize">📌 Summarize</option>
           <option value="expand">📖 Expand</option>
@@ -131,9 +136,11 @@ export default function Topic() {
           <option value="flashcards">🗂️ Flashcards</option>
           <option value="simplify">😄 Simplify</option>
         </select>
-        <button onClick={handleAIEnhancement} className="button2">🚀 Enhance with AI</button>
-        <button onClick={downloadAsPDF} className="button2">🧾 Export as PDF</button>
+        <button className="panel-button" onClick={handleAIEnhancement}>🚀 Enhance with AI</button>
+        <button className="panel-button" onClick={downloadAsPDF}>🧾 Export PDF</button>
       </div>
+
+      <h1 className="title">📝 {topic?.title}</h1>
 
       {showDiff && (
         <div className="diff-container">
@@ -160,11 +167,11 @@ export default function Topic() {
       )}
 
       <div className="note-list-container" id="pdf-content" onClick={handleClickOutside}>
-        <h2 className="header">📚 {topic?.title}</h2>
         {topic?.notes?.map((note, idx) => (
           <div
             key={note.id}
             id={`note-${note.id}`}
+            ref={(el) => noteRefs.current[note.id] = el}
             contentEditable
             suppressContentEditableWarning
             className="note-block"
