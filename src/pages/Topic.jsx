@@ -15,29 +15,28 @@ export default function Topic() {
   const [originalNotes, setOriginalNotes] = useState([]);
   const [enhancedNotes, setEnhancedNotes] = useState([]);
   const [showDiff, setShowDiff] = useState(false);
-  const noteRefs = useRef({}); // Store refs to contentEditable divs
+  const noteRefs = useRef({});
 
   // Fetch topic
   useEffect(() => {
     API.get(`/topics/${id}`).then((res) => setTopic(res.data));
   }, [id]);
 
-  // Auto-save notes with debounce
+  // Debounced auto-save
   useEffect(() => {
     if (!topic?.notes) return;
     const timeout = setTimeout(() => {
       API.put(`/topics/${id}/updateNotes`, { notes: topic.notes });
-    }, 1000);
+    }, 800);
     return () => clearTimeout(timeout);
   }, [topic?.notes]);
 
-  // Edit note
-  const handleEditNote = (noteId, content) => {
+  // --- Editing Logic ---
+  const handleEditNote = (noteId, e) => {
+    const content = e.target.innerText.replace(/\n+$/, ''); // remove trailing newlines
     setTopic((prev) => ({
       ...prev,
-      notes: prev.notes.map((n) =>
-        n.id === noteId ? { ...n, content } : n
-      ),
+      notes: prev.notes.map((n) => (n.id === noteId ? { ...n, content } : n)),
     }));
   };
 
@@ -49,40 +48,31 @@ export default function Topic() {
       updated.splice(idx + 1, 0, newNote);
       setTopic((prev) => ({ ...prev, notes: updated }));
       setTimeout(() => {
-        const nextBlock = noteRefs.current[newNote.id];
-        if (nextBlock) nextBlock.focus();
+        const next = noteRefs.current[newNote.id];
+        next?.focus();
       }, 0);
-    } else if (e.key === 'Backspace' && !e.currentTarget.innerText.trim()) {
+    } else if (e.key === 'Backspace' && e.currentTarget.innerText.trim() === '') {
       e.preventDefault();
       const updated = topic.notes.filter((_, i) => i !== idx);
       setTopic((prev) => ({ ...prev, notes: updated }));
       setTimeout(() => {
         const prevBlock = noteRefs.current[topic.notes[idx - 1]?.id];
-        if (prevBlock) prevBlock.focus();
+        prevBlock?.focus();
       }, 0);
     }
   };
 
   const handleClickOutside = (e) => {
-  const noteBlocks = document.querySelectorAll('.note-block');
-  const selectedNoteBlock = Array.from(noteBlocks).find((block) => block.isFocused());
+    if (e.target.classList.contains('note-list-container')) {
+      const newNote = { id: nanoid(), content: '' };
+      setTopic((prev) => ({ ...prev, notes: [...prev.notes, newNote] }));
+      setTimeout(() => {
+        noteRefs.current[newNote.id]?.focus();
+      }, 0);
+    }
+  };
 
-  if (selectedNoteBlock) {
-    // If a note block is selected, do nothing
-    return;
-  }
-
-  if (e.target.classList.contains('note-list-container')) {
-    const newNote = { id: nanoid(), content: '' };
-    setTopic((prev) => ({ ...prev, notes: [...prev.notes, newNote] }));
-    setTimeout(() => {
-      const nextBlock = noteRefs.current[newNote.id];
-      if (nextBlock) nextBlock.focus();
-    }, 0);
-  }
-};
-
-  // AI Enhancement
+  // --- AI Enhancement ---
   const handleAIEnhancement = async () => {
     const token = localStorage.getItem('token');
     try {
@@ -97,14 +87,16 @@ export default function Topic() {
         setShowDiff(true);
       } else alert(data.message || 'AI enhancement failed.');
     } catch (err) {
-      console.error('Improvement error:', err);
+      console.error('AI enhance error:', err);
       alert('An error occurred while enhancing notes.');
     }
   };
 
   const acceptChanges = async () => {
     const formattedNotes = enhancedNotes.map((note) =>
-      typeof note === 'object' && note.id && note.content ? note : { id: nanoid(), content: note }
+      typeof note === 'object' && note.id && note.content
+        ? note
+        : { id: nanoid(), content: note }
     );
     await API.put(`/topics/${id}/updateNotes`, { notes: formattedNotes });
     const updated = await API.get(`/topics/${id}`);
@@ -117,6 +109,7 @@ export default function Topic() {
     setEnhancedNotes([]);
   };
 
+  // --- PDF Export ---
   const downloadAsPDF = async () => {
     const content = document.getElementById('pdf-content');
     if (!content) return;
@@ -130,6 +123,8 @@ export default function Topic() {
     pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
     pdf.save(`${topic?.title || 'notes'}.pdf`);
   };
+
+  if (!topic) return <div>Loading...</div>;
 
   return (
     <div className="topic-page">
@@ -150,7 +145,7 @@ export default function Topic() {
 
       <h1 className="title">📝 {topic?.title}</h1>
 
-      {showDiff && (
+      {showDiff ? (
         <div className="diff-container">
           <div className="diff-preview">
             <div className="diff-box">
@@ -159,7 +154,6 @@ export default function Topic() {
                 <div key={i}><ReactMarkdown>{note.content || note}</ReactMarkdown></div>
               ))}
             </div>
-
             <div className="diff-box enhanced">
               <h3>Enhanced Notes ({mode})</h3>
               {enhancedNotes.map((note, i) => (
@@ -172,23 +166,25 @@ export default function Topic() {
             <button onClick={rejectChanges} className="button">❌ Reject</button>
           </div>
         </div>
+      ) : (
+        <div className="note-list-container" id="pdf-content" onClick={handleClickOutside}>
+          {topic?.notes?.map((note, idx) => (
+            <div
+              key={note.id}
+              id={`note-${note.id}`}
+              ref={(el) => (noteRefs.current[note.id] = el)}
+              contentEditable
+              suppressContentEditableWarning
+              className="note-block"
+              onInput={(e) => handleEditNote(note.id, e)}
+              onKeyDown={(e) => handleKeyDown(e, idx)}
+              spellCheck={false}
+            >
+              {note.content}
+            </div>
+          ))}
+        </div>
       )}
-
-      <div className="note-list-container" id="pdf-content" onClick={handleClickOutside} contentEditable >
-        {topic?.notes?.map((note, idx) => (
-          <div
-            key={note.id}
-            id={`note-${note.id}`}
-            ref={(el) => noteRefs.current[note.id] = el}
-            contentEditable suppressContentEditableWarning
-            className="note-block"
-            onInput={(e) => handleEditNote(note.id, e.currentTarget.innerText)}
-            onKeyDown={(e) => handleKeyDown(e, idx)}
-          >
-            {note.content}
-          </div>
-        ))}
-      </div>
     </div>
   );
 }

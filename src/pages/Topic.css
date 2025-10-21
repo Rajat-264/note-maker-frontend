@@ -9,69 +9,67 @@
 }
 
 .topic-page {
-  margin-top: 50px;
-  padding-left: 180px; /* leave space for floating panel */
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  width: 100vw;
-  overflow-x: hidden;
+  min-height: 100vh;
+  background: #121212;
+  color: #fff;
+  padding-left: 120px; /* leave space for floating panel */
 }
 
 .floating-panel {
   position: fixed;
-  left: 0;
-  top: 60px;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 10px;
-  background: #d4d4d4;
-  border-right: 1px solid #333;
-  height: calc(100vh - 50px);
-  width: 200px;
+  gap: 12px;
+  background: #1e1e1e;
+  padding: 14px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 .panel-button {
-  padding: 8px;
-  border-radius: 8px;
+  background: #2d2d2d;
   border: none;
-  background: #414141;
   color: #fff;
+  padding: 8px 12px;
+  border-radius: 6px;
   cursor: pointer;
-  text-align: left;
-  font-size: 16px;
+  transition: background 0.2s;
+  font-size: 0.9rem;
 }
-
 .panel-button:hover {
-  background: #3a3a3a;
+  background: #3c3c3c;
 }
 
 .note-list-container {
+  width: 70%;
+  max-width: 800px;
+  margin-top: 20px;
+  background: #181818;
   padding: 20px;
   border-radius: 10px;
-  background-color: #ffffff;
-  min-height: 300px;
-  width: 100%;
-  max-width: 850px;
-  margin: 0 auto;
+  cursor: text;
 }
 
 .note-block {
-  border: none;
   outline: none;
+  padding: 6px 10px;
   font-size: 1rem;
-  padding: 8px 12px;
-  margin: 4px 0;
   border-radius: 6px;
+  margin-bottom: 4px;
+  min-height: 22px;
   transition: background 0.2s;
-  color: #333;
+  white-space: pre-wrap;
+}
+.note-block:focus {
+  background: #2b2b2b;
 }
 
-.note-block:focus {
-  background-color: #eaeaea;
-}
 
 .diff-container {
   display: flex;
