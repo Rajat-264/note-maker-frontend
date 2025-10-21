@@ -19,6 +19,52 @@
   max-width: 100%;
   word-wrap: break-word;
 }
+.note-list-container {
+  cursor: text;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #1e1e1e;
+  min-height: 300px;
+}
+
+.note-block {
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  padding: 8px 12px;
+  margin: 4px 0;
+  border-radius: 6px;
+  transition: background 0.2s;
+  color: #e0e0e0;
+  background-color: #2b2b2b;
+}
+
+.note-block:focus {
+  background-color: #3a3a3a;
+}
+
+.diff-container {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0;
+}
+
+.diff-preview {
+  display: flex;
+  gap: 20px;
+}
+
+.diff-box {
+  flex: 1;
+  padding: 10px;
+  background: #1f1f1f;
+  border-radius: 8px;
+  color: #fff;
+}
+
+.diff-box.enhanced {
+  background: #282828;
+}
 
 .add-note {
   display: flex;
