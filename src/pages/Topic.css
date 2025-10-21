@@ -1,27 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Coiny&family=Lexend:wght@100..900&family=Outfit:wght@100..900&family=Poppins:wght@100..900&display=swap');
 
 .topic-page {
+  padding-left: 180px; /* leave space for floating panel */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100vw;
   overflow-x: hidden;
-  font-family: Poppins, sans-serif;
-  margin: 150px 0;
-  padding: 0 1rem;
-}
-
-.title {
-  font-size: 2rem;
-  margin-bottom: 2rem;
-  text-align: center;
-  max-width: 100%;
-  word-wrap: break-word;
-}
-
-.topic-page {
-  padding-left: 180px; /* leave space for floating panel */
 }
 
 .floating-panel {
@@ -46,6 +32,7 @@
   color: #fff;
   cursor: pointer;
   text-align: left;
+  font-size: 14px;
 }
 
 .panel-button:hover {
@@ -53,11 +40,13 @@
 }
 
 .note-list-container {
-  cursor: text;
   padding: 20px;
   border-radius: 10px;
-  background-color: #1e1e1e;
+  background-color: #ffffff;
   min-height: 300px;
+  width: 100%;
+  max-width: 850px;
+  margin: 0 auto;
 }
 
 .note-block {
@@ -68,18 +57,19 @@
   margin: 4px 0;
   border-radius: 6px;
   transition: background 0.2s;
-  color: #e0e0e0;
-  background-color: #2b2b2b;
+  color: #333;
+  background-color: #f8f9fa;
 }
 
 .note-block:focus {
-  background-color: #3a3a3a;
+  background-color: #eaeaea;
 }
 
 .diff-container {
   display: flex;
   flex-direction: column;
   margin: 20px 0;
+  align-items: center;
 }
 
 .diff-preview {
@@ -90,15 +80,14 @@
 .diff-box {
   flex: 1;
   padding: 10px;
-  background: #1f1f1f;
+  background: #f8f9fa;
   border-radius: 8px;
-  color: #fff;
+  color: #333;
 }
 
 .diff-box.enhanced {
-  background: #282828;
+  background: #eaeaea;
 }
-
 
 .add-note {
   display: flex;
@@ -118,57 +107,16 @@
   border: 2px solid rgb(80, 80, 80);
   resize: vertical;
   box-sizing: border-box;
+  font-size: 14px;
 }
 
-.flex {
-  display: flex;
-}
-
-.gap-3 {
-  gap: 12px;
-}
-
-.mt-2 {
-  margin-top: 8px;
-}
-
-.buttons{
-  display: flex;
-  flex-direction: row;
-  gap: 30px;
-}
-
-.buttons1{
-  display: flex;
-  flex-direction: row;
-  padding: 10px;
-  gap: 30px;
-  border: 2px solid rgb(80, 80, 80);
-  border-radius: 15px;
-  width: fit-content;
-}
-
-.button2 {
-  background-color: rgba(4, 70, 252, 0.8);
-  color: aliceblue;
+.button {
+  background-color: #f8f9fa;
+  color: #213547;
   padding: 10px 20px;
   width: fit-content;
   box-shadow: 0 0 5px rgb(72, 72, 72);
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-family: 'Poppins', sans-serif;
-  font-size: 1rem;
-  transition: background-color 0.2s;
-}
-
-.button1 {
-  background-color: aliceblue;
-  color: rgba(4, 70, 252, 0.8);
-  padding: 10px 20px;
-  width: fit-content;
-  box-shadow: 0 0 5px rgb(72, 72, 72);
-  border: 2px solid black;
   border-radius: 15px;
   cursor: pointer;
   font-family: 'Poppins', sans-serif;
@@ -177,300 +125,7 @@
   transition: background-color 0.2s;
 }
 
-.note-list-container {
-  width: 100%;
-  max-width: 800px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  overflow: visible;
-  margin: 30px 0;
+.button:hover {
+  background-color: #cce6ff;
 }
 
-.header {
-  font-size: 24px;
-  margin: 50px 0 20px 0;
-  width: 100%;
-  word-wrap: break-word;
-}
-
-#pdf-content {
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-  font-family: 'Poppins', sans-serif;
-  color: #333;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-#pdf-content h2 {
-  font-size: 28px;
-  margin-bottom: 20px;
-  color: #222;
-}
-
-.note-list {
-  width: 100%;
-  padding: 0;
-  list-style: none;
-  overflow: visible;
-}
-
-.markdown-wrapper {
-  margin-bottom: 1.5rem;
-  width: 100%;
-  word-break: normal;
-  overflow-wrap: anywhere; 
-  white-space: normal;
-}
-
-.markdown-container {
-  width: 100%;
-  max-width: 100%;
-  word-break: normal;
-  overflow-wrap: anywhere; 
-  white-space: normal;
-}
-
-.markdown-body {
-  font-family: 'Poppins', sans-serif;
-  font-size: 1rem;
-  line-height: 1.6;
-  word-break: normal;
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
-  max-width: 100%;
-  padding: 0;
-  margin: 0;
-  overflow: visible;
-}
-
-.markdown-body h1,
-.markdown-body h2,
-.markdown-body h3,
-.markdown-body h4,
-.markdown-body h5,
-.markdown-body h6 {
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-  line-height: 1.3;
-  max-width: 100%;
-  word-wrap: break-word;
-}
-
-.markdown-body p {
-  margin-bottom: 1rem;
-  max-width: 100%;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.markdown-body ul,
-.markdown-body ol {
-  margin-left: 1rem;
-  padding-left: 1rem;
-  max-width: 100%;
-  overflow: visible;
-}
-
-.markdown-body pre,
-.markdown-body code {
-  font-family: 'Poppins', sans-serif !important;
-  white-space: pre-wrap !important;
-  word-break: break-word !important;
-  overflow-wrap: anywhere !important;
-  overflow-x: auto !important;
-  background-color: #f6f8fa;
-  padding: 0.5rem;
-  border-radius: 6px;
-  box-sizing: border-box;
-  max-width: 100%;
-}
-
-.markdown-body pre > code {
-  font-family: 'Poppins', sans-serif !important;
-  white-space: pre-wrap !important;
-  word-break: break-word !important;
-  overflow-wrap: anywhere !important;
-  display: block;
-  overflow-x: auto;
-  max-width: 100%;
-}
-
-.markdown-body li {
-  font-family: 'Poppins', sans-serif !important;
-  white-space: normal !important;
-  word-break: break-word !important;
-  overflow-wrap: anywhere !important;
-  max-width: 100% !important;
-}
-
-.markdown-body {
-  font-family: 'Poppins', sans-serif !important;
-  word-break: break-word !important;
-  overflow-wrap: anywhere !important;
-  white-space: normal !important;
-  max-width: 100%;
-}
-
-.markdown-body a {
-  word-break: break-word !important;  
-}
-
-.markdown-body blockquote {
-  border-left: 4px solid #dfe2e5;
-  color: #6a737d;
-  padding: 0 1em;
-  margin: 0 0 1rem 0;
-  max-width: 100%;
-}
-
-.markdown-body a {
-  color: #0366d6;
-  text-decoration: none;
-  word-break: break-all;
-}
-
-.markdown-body a:hover {
-  text-decoration: underline;
-}
-
-.insert-btn {
-  background: #f2f2f2;
-  border: 1px dashed #aaa;
-  padding: 6px 12px;
-  font-size: 0.9rem;
-  margin: 4px 0;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-}
-
-.insert-btn.selected {
-  background-color: #cce0ff;
-  border-color: #4a90e2;
-}
-
-.note-position-indicator {
-  margin-top: 6px;
-  font-size: 14px;
-  font-style: italic;
-  color: #555;
-}
-
-.markdown-wrapper.inserting {
-  background-color: #f3faff;
-  border: 2px dashed #007acc;
-  border-radius: 8px;
-}
-
-.button.active {
-  background-color: #007acc;
-  color: white;
-}
-
-@media (max-width: 768px) {
-  .topic-page {
-    margin: 100px 0;
-    padding: 0 5%;
-  }
-
-  .title {
-    font-size: 1.8rem;
-  }
-
-  .text-field {
-    height: 120px;
-  }
-
-  .button {
-    padding: 10px 16px;
-  }
-
-  .header {
-    font-size: 20px;
-  }
-
-  .markdown-body {
-    font-size: 0.95rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .topic-page {
-    margin: 80px 0;
-  }
-
-  .title {
-    font-size: 1.5rem;
-  }
-
-  .text-field {
-    height: 100px;
-    font-size: 14px;
-  }
-
-  .button {
-    font-size: 14px;
-    padding: 8px 14px;
-  }
-
-  .header {
-    font-size: 18px;
-  }
-
-  .markdown-body {
-    font-size: 0.9rem;
-  }
-
-  .markdown-body ul,
-  .markdown-body ol {
-    margin-left: 0.5rem;
-    padding-left: 0.8rem;
-  }
-}
-
-.diff-container{
-  margin-top: 2rem;
-  padding: 2rem;
-  width: 1150px; 
-  background: #eaeaea;
-  justify-content: center;
-  align-items: center;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.diff-preview{
-  display: flex;
-  flex-direction: row;
-  gap: 2rem;
-  justify-content: center;
-  align-items: center;
-}
-
-.diff-box {
-  background-color: #f3f3f3;
-  padding: 1rem;
-  white-space: pre-wrap;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-  border: 2px solid #ccc;
-  font-family: 'Poppins', sans-serif;
-  max-width: 550px;
-  max-height: 650px;
-  overflow-y: auto;
-}
-
-.diff-box.enhanced {
-  background-color: #e9f7ef;
-  border-color: #28a745;
-  max-width: 550px;
-  max-height: 650px;
-  overflow-y: auto;
-}
