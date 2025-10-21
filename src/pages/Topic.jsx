@@ -166,7 +166,7 @@ export default function Topic() {
         </div>
       )}
 
-      <div className="note-list-container" id="pdf-content" onClick={handleClickOutside} contentEditable suppressContentEditableWarning>
+      <div className="note-list-container" id="pdf-content" onClick={handleClickOutside} contentEditable >
         {topic?.notes?.map((note, idx) => (
           <div
             key={note.id}
