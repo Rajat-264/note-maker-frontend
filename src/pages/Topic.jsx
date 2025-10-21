@@ -172,7 +172,7 @@ export default function Topic() {
             key={note.id}
             id={`note-${note.id}`}
             ref={(el) => noteRefs.current[note.id] = el}
-            
+            contentEditable suppressContentEditableWarning
             className="note-block"
             onInput={(e) => handleEditNote(note.id, e.currentTarget.innerText)}
             onKeyDown={(e) => handleKeyDown(e, idx)}
