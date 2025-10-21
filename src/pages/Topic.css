@@ -1,5 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Coiny&family=Lexend:wght@100..900&family=Outfit:wght@100..900&family=Poppins:wght@100..900&display=swap');
 
+.title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
 .topic-page {
   padding-left: 180px; /* leave space for floating panel */
   display: flex;
@@ -126,6 +134,7 @@
 }
 
 .button:hover {
-  background-color: #cce6ff;
+  background-color: #0486ff;
 }
+
 
