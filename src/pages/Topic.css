@@ -56,7 +56,7 @@
   background: #ffffff;
   border: 1px solid var(--panel-border);
   color: var(--text-color);
-  padding: 8px 12px;
+  padding: 10px 20px;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -87,7 +87,6 @@
   padding: 12px 16px;
   font-size: 1rem;
   border-radius: 8px;
-  margin-bottom: 8px;
   min-height: 24px;
   white-space: pre-wrap;
   line-height: 1.6;
@@ -167,7 +166,7 @@
 
 /* ---------- Buttons ---------- */
 .button {
-  background-color: var(--accent-color);
+  background-color: #0062d1;
   color: white;
   padding: 12px 24px;
   width: fit-content;
@@ -182,7 +181,7 @@
 }
 
 .button:hover {
-  background-color: #0062d1;
+  background-color: #00397b;
   box-shadow: 0 4px 12px var(--shadow-medium);
   transform: translateY(-1px);
 }
