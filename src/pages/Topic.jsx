@@ -141,30 +141,15 @@ export default function Topic() {
 
   // ✅ Prevent extra empty block on outside click
   const handleClickOutside = (e) => {
-  const noteBlocks = document.querySelectorAll('.note-block');
-  const selectedNoteBlock = Array.from(noteBlocks).find((block) => block.isFocused());
-
-  if (selectedNoteBlock) {
-    // If a note block is selected, do nothing
-    return;
-  }
-
-  if (e.target.classList.contains('note-list-container')) {
-    const lastNote = topic.notes[topic.notes.length - 1];
-    if (lastNote?.content.trim() !== '') {
-      // If the last note block is not empty, add a new note block with the text "Add note"
-      const newNote = { id: nanoid(), content: 'Add note' };
-      const updated = [...topic.notes, newNote];
-      setTopic((prev) => ({ ...prev, notes: updated }));
-      setTimeout(() => noteRefs.current[newNote.id]?.focus(), 0);
-    } else {
-      // If the last note block is empty, add a new note block as before
-      const newNote = { id: nanoid(), content: '' };
-      setTopic((prev) => ({ ...prev, notes: [...prev.notes, newNote] }));
-      setTimeout(() => noteRefs.current[newNote.id]?.focus(), 0);
+    if (e.target.classList.contains('note-list-container')) {
+      const last = topic.notes[topic.notes.length - 1];
+      if (last?.content.trim() !== '') {
+        const newNote = { id: nanoid(), content: '' };
+        setTopic((prev) => ({ ...prev, notes: [...prev.notes, newNote] }));
+        setTimeout(() => noteRefs.current[newNote.id]?.focus(), 0);
+      }
     }
-  }
-};
+  };
 
   // ✅ AI Enhancement (unchanged)
   const handleAIEnhancement = async () => {
@@ -225,7 +210,6 @@ export default function Topic() {
       {/* Floating Sidebar */}
       <div className="floating-panel">
         <button className="panel-button" onClick={() => navigate('/dashboard')}>⬅ Back</button>
-        <button className="panel-button" onClick={handleAIEnhancement}>🚀 Enhance</button>
         <select value={mode} onChange={(e) => setMode(e.target.value)} className="panel-button">
           <option value="improve">✨ Improve</option>
           <option value="summarize">📌 Summarize</option>
@@ -234,7 +218,7 @@ export default function Topic() {
           <option value="flashcards">🗂️ Flashcards</option>
           <option value="simplify">😄 Simplify</option>
         </select>
-        
+        <button className="panel-button" onClick={handleAIEnhancement}>🚀 Enhance</button>
         <button className="panel-button" onClick={downloadAsPDF}>🧾 Export PDF</button>
       </div>
 
