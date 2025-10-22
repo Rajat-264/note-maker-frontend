@@ -16,6 +16,7 @@ export default function Topic() {
   const [enhancedNotes, setEnhancedNotes] = useState([]);
   const [showDiff, setShowDiff] = useState(false);
   const noteRefs = useRef({});
+  const lastSelectionRef = useRef(null);
 
   // ✅ Fetch topic once
   useEffect(() => {
@@ -31,9 +32,27 @@ export default function Topic() {
     return () => clearTimeout(timeout);
   }, [topic?.notes]);
 
-  // ✅ Cursor-stable edit handling
+  // ✅ Save selection before edit
+  const saveSelection = useCallback(() => {
+    const selection = window.getSelection();
+    if (selection.rangeCount > 0) {
+      lastSelectionRef.current = selection.getRangeAt(0);
+    }
+  }, []);
+
+  // ✅ Restore selection after edit
+  const restoreSelection = useCallback(() => {
+    if (lastSelectionRef.current) {
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(lastSelectionRef.current);
+    }
+  }, []);
+
+  // ✅ Cursor-stable edit handling with selection preservation
   const handleEditNote = useCallback((noteId, e) => {
-    const content = e.target.innerText.replace(/\n+$/, '');
+    saveSelection();
+    const content = e.target.innerText;
     setTopic((prev) => {
       if (!prev) return prev;
       const updatedNotes = prev.notes.map((n) =>
@@ -41,11 +60,15 @@ export default function Topic() {
       );
       return { ...prev, notes: updatedNotes };
     });
-  }, []);
+    
+    // Restore selection after state update
+    setTimeout(restoreSelection, 0);
+  }, [saveSelection, restoreSelection]);
 
   const handleKeyDown = (e, idx) => {
     if (e.key === 'Enter') {
       e.preventDefault();
+      saveSelection();
       const newNote = { id: nanoid(), content: '' };
       const updated = [...topic.notes];
       updated.splice(idx + 1, 0, newNote);
@@ -55,14 +78,24 @@ export default function Topic() {
         const next = noteRefs.current[newNote.id];
         next?.focus();
       }, 0);
-    } else if (e.key === 'Backspace' && e.currentTarget.innerText.trim() === '') {
+    } else if (e.key === 'Backspace' && e.currentTarget.innerText === '') {
       e.preventDefault();
+      saveSelection();
       const updated = topic.notes.filter((_, i) => i !== idx);
       setTopic((prev) => ({ ...prev, notes: updated }));
 
       setTimeout(() => {
         const prevBlock = noteRefs.current[topic.notes[idx - 1]?.id];
-        prevBlock?.focus();
+        if (prevBlock) {
+          prevBlock.focus();
+          // Move cursor to end of previous block
+          const range = document.createRange();
+          range.selectNodeContents(prevBlock);
+          range.collapse(false);
+          const selection = window.getSelection();
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
       }, 0);
     }
   };
@@ -191,6 +224,7 @@ export default function Topic() {
               className="note-block"
               onInput={(e) => handleEditNote(note.id, e)}
               onKeyDown={(e) => handleKeyDown(e, idx)}
+              onBlur={saveSelection}
               spellCheck={false}
             >
               {note.content}
