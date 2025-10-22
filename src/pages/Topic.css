@@ -17,6 +17,7 @@
 /* ---------- Page Layout ---------- */
 .topic-page {
   display: flex;
+  margin-top: 2rem;
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
@@ -71,7 +72,7 @@
 
 /* ---------- Notes Container ---------- */
 .note-list-container {
-  width: 85%;
+  width: 65%;
   max-width: 1200px;
   margin-top: 20px;
   background: var(--container-bg);
