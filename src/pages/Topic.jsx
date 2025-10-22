@@ -16,7 +16,7 @@ export default function Topic() {
   const [enhancedNotes, setEnhancedNotes] = useState([]);
   const [showDiff, setShowDiff] = useState(false);
   const noteRefs = useRef({});
-  const lastSelectionRef = useRef(null);
+  const isComposingRef = useRef(false); // For IME composition (like Chinese/Japanese input)
 
   // ✅ Fetch topic once
   useEffect(() => {
@@ -32,27 +32,69 @@ export default function Topic() {
     return () => clearTimeout(timeout);
   }, [topic?.notes]);
 
-  // ✅ Save selection before edit
-  const saveSelection = useCallback(() => {
+  // ✅ Save cursor position
+  const saveCursorPosition = useCallback((element) => {
     const selection = window.getSelection();
     if (selection.rangeCount > 0) {
-      lastSelectionRef.current = selection.getRangeAt(0);
+      const range = selection.getRangeAt(0);
+      const preCaretRange = range.cloneRange();
+      preCaretRange.selectNodeContents(element);
+      preCaretRange.setEnd(range.startContainer, range.startOffset);
+      const position = preCaretRange.toString().length;
+      
+      return {
+        position,
+        elementId: element.id
+      };
     }
+    return null;
   }, []);
 
-  // ✅ Restore selection after edit
-  const restoreSelection = useCallback(() => {
-    if (lastSelectionRef.current) {
+  // ✅ Restore cursor position
+  const restoreCursorPosition = useCallback((element, position) => {
+    if (!element || position === null) return;
+    
+    const walker = document.createTreeWalker(
+      element,
+      NodeFilter.SHOW_TEXT,
+      null,
+      false
+    );
+    
+    let currentPos = 0;
+    let targetNode = null;
+    let targetOffset = 0;
+    
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      const nodeLength = node.textContent.length;
+      
+      if (currentPos + nodeLength >= position) {
+        targetNode = node;
+        targetOffset = position - currentPos;
+        break;
+      }
+      currentPos += nodeLength;
+    }
+    
+    if (targetNode) {
       const selection = window.getSelection();
+      const range = document.createRange();
+      range.setStart(targetNode, targetOffset);
+      range.collapse(true);
       selection.removeAllRanges();
-      selection.addRange(lastSelectionRef.current);
+      selection.addRange(range);
     }
   }, []);
 
-  // ✅ Cursor-stable edit handling with selection preservation
+  // ✅ Stable edit handling with cursor preservation
   const handleEditNote = useCallback((noteId, e) => {
-    saveSelection();
-    const content = e.target.innerText;
+    if (isComposingRef.current) return; // Don't update during IME composition
+    
+    const element = e.target;
+    const cursorPosition = saveCursorPosition(element);
+    const content = element.innerText;
+    
     setTopic((prev) => {
       if (!prev) return prev;
       const updatedNotes = prev.notes.map((n) =>
@@ -61,14 +103,32 @@ export default function Topic() {
       return { ...prev, notes: updatedNotes };
     });
     
-    // Restore selection after state update
-    setTimeout(restoreSelection, 0);
-  }, [saveSelection, restoreSelection]);
+    // Restore cursor position after state update
+    if (cursorPosition) {
+      setTimeout(() => {
+        const updatedElement = document.getElementById(`note-${noteId}`);
+        if (updatedElement) {
+          restoreCursorPosition(updatedElement, cursorPosition.position);
+        }
+      }, 0);
+    }
+  }, [saveCursorPosition, restoreCursorPosition]);
+
+  // ✅ Handle IME composition events
+  const handleCompositionStart = useCallback(() => {
+    isComposingRef.current = true;
+  }, []);
+
+  const handleCompositionEnd = useCallback(() => {
+    isComposingRef.current = false;
+  }, []);
 
   const handleKeyDown = (e, idx) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      saveSelection();
+      const element = e.target;
+      const cursorPosition = saveCursorPosition(element);
+      
       const newNote = { id: nanoid(), content: '' };
       const updated = [...topic.notes];
       updated.splice(idx + 1, 0, newNote);
@@ -76,27 +136,34 @@ export default function Topic() {
 
       setTimeout(() => {
         const next = noteRefs.current[newNote.id];
-        next?.focus();
+        if (next) {
+          next.focus();
+          // Restore cursor position in the original element if needed
+          if (cursorPosition) {
+            restoreCursorPosition(element, cursorPosition.position);
+          }
+        }
       }, 0);
     } else if (e.key === 'Backspace' && e.currentTarget.innerText === '') {
       e.preventDefault();
-      saveSelection();
-      const updated = topic.notes.filter((_, i) => i !== idx);
-      setTopic((prev) => ({ ...prev, notes: updated }));
+      if (topic.notes.length > 1) {
+        const updated = topic.notes.filter((_, i) => i !== idx);
+        setTopic((prev) => ({ ...prev, notes: updated }));
 
-      setTimeout(() => {
-        const prevBlock = noteRefs.current[topic.notes[idx - 1]?.id];
-        if (prevBlock) {
-          prevBlock.focus();
-          // Move cursor to end of previous block
-          const range = document.createRange();
-          range.selectNodeContents(prevBlock);
-          range.collapse(false);
-          const selection = window.getSelection();
-          selection.removeAllRanges();
-          selection.addRange(range);
-        }
-      }, 0);
+        setTimeout(() => {
+          const prevBlock = noteRefs.current[topic.notes[idx - 1]?.id];
+          if (prevBlock) {
+            prevBlock.focus();
+            // Move cursor to end of previous block
+            const range = document.createRange();
+            range.selectNodeContents(prevBlock);
+            range.collapse(false);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+          }
+        }, 0);
+      }
     }
   };
 
@@ -224,7 +291,8 @@ export default function Topic() {
               className="note-block"
               onInput={(e) => handleEditNote(note.id, e)}
               onKeyDown={(e) => handleKeyDown(e, idx)}
-              onBlur={saveSelection}
+              onCompositionStart={handleCompositionStart}
+              onCompositionEnd={handleCompositionEnd}
               spellCheck={false}
             >
               {note.content}
