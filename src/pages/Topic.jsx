@@ -16,23 +16,28 @@ export default function Topic() {
   const [enhancedNotes, setEnhancedNotes] = useState([]);
   const [showDiff, setShowDiff] = useState(false);
   const noteRefs = useRef({});
-  const isComposingRef = useRef(false); // For IME composition (like Chinese/Japanese input)
+  const isComposingRef = useRef(false);
 
   // ✅ Fetch topic once
   useEffect(() => {
-    API.get(`/topics/${id}`).then((res) => setTopic(res.data));
+    API.get(`/topics/${id}`).then((res) => {
+      // Filter out empty or null notes before setting
+      const filteredNotes = res.data.notes?.filter(n => n?.content?.trim() !== '') || [];
+      setTopic({ ...res.data, notes: filteredNotes.length ? filteredNotes : [{ id: nanoid(), content: '' }] });
+    });
   }, [id]);
 
-  // ✅ Debounced auto-save
+  // ✅ Debounced auto-save (filter out empty)
   useEffect(() => {
     if (!topic?.notes) return;
     const timeout = setTimeout(() => {
-      API.put(`/topics/${id}/updateNotes`, { notes: topic.notes });
+      const cleanNotes = topic.notes.filter((n) => n.content.trim() !== '');
+      API.put(`/topics/${id}/updateNotes`, { notes: cleanNotes });
     }, 800);
     return () => clearTimeout(timeout);
   }, [topic?.notes]);
 
-  // ✅ Save cursor position
+  // ✅ Cursor position logic (unchanged)
   const saveCursorPosition = useCallback((element) => {
     const selection = window.getSelection();
     if (selection.rangeCount > 0) {
@@ -41,34 +46,18 @@ export default function Topic() {
       preCaretRange.selectNodeContents(element);
       preCaretRange.setEnd(range.startContainer, range.startOffset);
       const position = preCaretRange.toString().length;
-      
-      return {
-        position,
-        elementId: element.id
-      };
+      return { position, elementId: element.id };
     }
     return null;
   }, []);
 
-  // ✅ Restore cursor position
   const restoreCursorPosition = useCallback((element, position) => {
     if (!element || position === null) return;
-    
-    const walker = document.createTreeWalker(
-      element,
-      NodeFilter.SHOW_TEXT,
-      null,
-      false
-    );
-    
-    let currentPos = 0;
-    let targetNode = null;
-    let targetOffset = 0;
-    
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+    let currentPos = 0, targetNode = null, targetOffset = 0;
     while (walker.nextNode()) {
       const node = walker.currentNode;
       const nodeLength = node.textContent.length;
-      
       if (currentPos + nodeLength >= position) {
         targetNode = node;
         targetOffset = position - currentPos;
@@ -76,7 +65,6 @@ export default function Topic() {
       }
       currentPos += nodeLength;
     }
-    
     if (targetNode) {
       const selection = window.getSelection();
       const range = document.createRange();
@@ -87,14 +75,13 @@ export default function Topic() {
     }
   }, []);
 
-  // ✅ Stable edit handling with cursor preservation
+  // ✅ Stable edit with cursor
   const handleEditNote = useCallback((noteId, e) => {
-    if (isComposingRef.current) return; // Don't update during IME composition
-    
+    if (isComposingRef.current) return;
     const element = e.target;
     const cursorPosition = saveCursorPosition(element);
     const content = element.innerText;
-    
+
     setTopic((prev) => {
       if (!prev) return prev;
       const updatedNotes = prev.notes.map((n) =>
@@ -102,59 +89,44 @@ export default function Topic() {
       );
       return { ...prev, notes: updatedNotes };
     });
-    
-    // Restore cursor position after state update
+
     if (cursorPosition) {
       setTimeout(() => {
         const updatedElement = document.getElementById(`note-${noteId}`);
-        if (updatedElement) {
-          restoreCursorPosition(updatedElement, cursorPosition.position);
-        }
+        if (updatedElement) restoreCursorPosition(updatedElement, cursorPosition.position);
       }, 0);
     }
   }, [saveCursorPosition, restoreCursorPosition]);
 
-  // ✅ Handle IME composition events
+  // ✅ Handle IME
   const handleCompositionStart = useCallback(() => {
     isComposingRef.current = true;
   }, []);
-
   const handleCompositionEnd = useCallback(() => {
     isComposingRef.current = false;
   }, []);
 
+  // ✅ Enter / Backspace logic
   const handleKeyDown = (e, idx) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      const element = e.target;
-      const cursorPosition = saveCursorPosition(element);
-      
-      const newNote = { id: nanoid(), content: '' };
-      const updated = [...topic.notes];
-      updated.splice(idx + 1, 0, newNote);
-      setTopic((prev) => ({ ...prev, notes: updated }));
-
-      setTimeout(() => {
-        const next = noteRefs.current[newNote.id];
-        if (next) {
-          next.focus();
-          // Restore cursor position in the original element if needed
-          if (cursorPosition) {
-            restoreCursorPosition(element, cursorPosition.position);
-          }
-        }
-      }, 0);
+      // Only add if last note isn't empty
+      if (topic.notes[topic.notes.length - 1].content.trim() !== '') {
+        const newNote = { id: nanoid(), content: '' };
+        const updated = [...topic.notes];
+        updated.splice(idx + 1, 0, newNote);
+        setTopic((prev) => ({ ...prev, notes: updated }));
+        setTimeout(() => noteRefs.current[newNote.id]?.focus(), 0);
+      }
     } else if (e.key === 'Backspace' && e.currentTarget.innerText === '') {
       e.preventDefault();
       if (topic.notes.length > 1) {
         const updated = topic.notes.filter((_, i) => i !== idx);
         setTopic((prev) => ({ ...prev, notes: updated }));
-
         setTimeout(() => {
           const prevBlock = noteRefs.current[topic.notes[idx - 1]?.id];
           if (prevBlock) {
             prevBlock.focus();
-            // Move cursor to end of previous block
             const range = document.createRange();
             range.selectNodeContents(prevBlock);
             range.collapse(false);
@@ -167,17 +139,19 @@ export default function Topic() {
     }
   };
 
+  // ✅ Prevent extra empty block on outside click
   const handleClickOutside = (e) => {
     if (e.target.classList.contains('note-list-container')) {
-      const newNote = { id: nanoid(), content: '' };
-      setTopic((prev) => ({ ...prev, notes: [...prev.notes, newNote] }));
-      setTimeout(() => {
-        noteRefs.current[newNote.id]?.focus();
-      }, 0);
+      const last = topic.notes[topic.notes.length - 1];
+      if (last?.content.trim() !== '') {
+        const newNote = { id: nanoid(), content: '' };
+        setTopic((prev) => ({ ...prev, notes: [...prev.notes, newNote] }));
+        setTimeout(() => noteRefs.current[newNote.id]?.focus(), 0);
+      }
     }
   };
 
-  // ✅ AI Enhancement
+  // ✅ AI Enhancement (unchanged)
   const handleAIEnhancement = async () => {
     const token = localStorage.getItem('token');
     try {
@@ -214,7 +188,7 @@ export default function Topic() {
     setEnhancedNotes([]);
   };
 
-  // ✅ Export PDF
+  // ✅ PDF Export (unchanged)
   const downloadAsPDF = async () => {
     const content = document.getElementById('pdf-content');
     if (!content) return;
@@ -236,7 +210,6 @@ export default function Topic() {
       {/* Floating Sidebar */}
       <div className="floating-panel">
         <button className="panel-button" onClick={() => navigate('/dashboard')}>⬅ Back</button>
-
         <select value={mode} onChange={(e) => setMode(e.target.value)} className="panel-button">
           <option value="improve">✨ Improve</option>
           <option value="summarize">📌 Summarize</option>
@@ -245,7 +218,6 @@ export default function Topic() {
           <option value="flashcards">🗂️ Flashcards</option>
           <option value="simplify">😄 Simplify</option>
         </select>
-
         <button className="panel-button" onClick={handleAIEnhancement}>🚀 Enhance</button>
         <button className="panel-button" onClick={downloadAsPDF}>🧾 Export PDF</button>
       </div>
@@ -261,7 +233,6 @@ export default function Topic() {
                 <div key={i}><ReactMarkdown>{note.content || note}</ReactMarkdown></div>
               ))}
             </div>
-
             <div className="diff-box enhanced">
               <h3>Enhanced ({mode})</h3>
               {enhancedNotes.map((note, i) => (
@@ -281,23 +252,25 @@ export default function Topic() {
           id="pdf-content"
           onClick={handleClickOutside}
         >
-          {topic?.notes?.map((note, idx) => (
-            <div
-              key={note.id}
-              id={`note-${note.id}`}
-              ref={(el) => (noteRefs.current[note.id] = el)}
-              contentEditable
-              suppressContentEditableWarning
-              className="note-block"
-              onInput={(e) => handleEditNote(note.id, e)}
-              onKeyDown={(e) => handleKeyDown(e, idx)}
-              onCompositionStart={handleCompositionStart}
-              onCompositionEnd={handleCompositionEnd}
-              spellCheck={false}
-            >
-              {note.content}
-            </div>
-          ))}
+          {topic?.notes
+            ?.filter((n) => n.content.trim() !== '' || topic.notes.length === 1)
+            .map((note, idx) => (
+              <div
+                key={note.id}
+                id={`note-${note.id}`}
+                ref={(el) => (noteRefs.current[note.id] = el)}
+                contentEditable
+                suppressContentEditableWarning
+                className="note-block"
+                onInput={(e) => handleEditNote(note.id, e)}
+                onKeyDown={(e) => handleKeyDown(e, idx)}
+                onCompositionStart={handleCompositionStart}
+                onCompositionEnd={handleCompositionEnd}
+                spellCheck={false}
+              >
+                {note.content}
+              </div>
+            ))}
         </div>
       )}
     </div>
