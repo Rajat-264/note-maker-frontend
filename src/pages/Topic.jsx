@@ -210,7 +210,8 @@ export default function Topic() {
       {/* Floating Sidebar */}
       <div className="floating-panel">
         <button className="panel-button" onClick={() => navigate('/dashboard')}>⬅ Back</button>
-        <select value={mode} onChange={(e) => setMode(e.target.value)} className="panel-button">
+        <button className="panel-button" onClick={handleAIEnhancement}>🚀 Enhance</button>
+        <select value={mode} onChange={(e) => setMode(e.target.value)} className="panel-button-1">
           <option value="improve">✨ Improve</option>
           <option value="summarize">📌 Summarize</option>
           <option value="expand">📖 Expand</option>
@@ -218,7 +219,6 @@ export default function Topic() {
           <option value="flashcards">🗂️ Flashcards</option>
           <option value="simplify">😄 Simplify</option>
         </select>
-        <button className="panel-button" onClick={handleAIEnhancement}>🚀 Enhance</button>
         <button className="panel-button" onClick={downloadAsPDF}>🧾 Export PDF</button>
       </div>
 

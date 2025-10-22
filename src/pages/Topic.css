@@ -6,8 +6,9 @@
   --panel-border: #e0e0e0;
   --text-color: #1e1e1e;
   --note-bg: #ffffff;
-  --note-hover: #f5f5f5;
+  --note-hover: #fbfbfb;
   --accent-color: #0078ff;
+  --accent-colour: #aaaaaa;
   --shadow-light: rgba(0, 0, 0, 0.1);
   --shadow-medium: rgba(0, 0, 0, 0.15);
   --border-radius: 10px;
@@ -64,6 +65,18 @@
   text-align: left;
 }
 
+.panel-button-1 {
+  background: #ffffff;
+  border: 1px solid var(--panel-border);
+  color: var(--text-color);
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
 .panel-button:hover {
   background: var(--accent-color);
   color: white;
@@ -98,7 +111,7 @@
 
 .note-block:focus {
   background: var(--note-hover);
-  border-color: var(--accent-color);
+  border-color: var(--accent-colour);
   box-shadow: 0 0 0 2px rgba(0, 120, 255, 0.1);
 }
 
